@@ -59,4 +59,7 @@ typings/
 
 # next.js build output
 .next
+
+# Added
 build/
+.DS_Store
