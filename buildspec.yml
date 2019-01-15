@@ -17,4 +17,4 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - aws s3 sync --delete ./build s3://octo-site-assets-production-us-east-1
+      - aws s3 sync --delete ./build s3://smellyoctopus.com
