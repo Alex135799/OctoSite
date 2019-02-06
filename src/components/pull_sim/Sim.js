@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
-import './App.css';
+import logo from '../../assets/logo.svg';
+import './Sim.css';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as winMessagesActions from '../actions/winMessagesActions';
+import * as winMessagesActions from '../../actions/winMessagesActions';
 import PropTypes from 'prop-types';
 
-class App extends Component {
+class Sim extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,18 +52,18 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
+      <div className="Sim">
+        <header className="Sim-header">
           <a href="#">
-            <img src={logo} className="App-logo" alt="logo"
+            <img src={logo} className="Sim-logo" alt="logo"
               onClick={this.updateWinMessages} />
           </a>
           <p>
-            {this.props.winMessages.winMessage}
+            {state.winMessages.winMessage}
           </p>
           <p>
-            Total number of pulls: {this.props.winMessages.pullSummary.totalPulls}.
-            Total number of actual wins: {this.props.winMessages.pullSummary.totalWins}.
+            Total number of pulls: {state.winMessages.pullSummary.totalPulls}.
+            Total number of actual wins: {state.winMessages.pullSummary.totalWins}.
           </p>
           {this.resetButton()}
         </header>
@@ -72,7 +72,7 @@ class App extends Component {
   }
 }
 
-App.PropTypes = {
+Sim.PropTypes = {
   winMessageActions: PropTypes.object,
   winMessages: PropTypes.object
 }
@@ -92,4 +92,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(Sim);
