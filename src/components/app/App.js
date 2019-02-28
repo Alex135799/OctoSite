@@ -15,8 +15,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Navbar currentPage={this.state.currentPage}/>
         <header className="App-header">
+          <Navbar currentPage={this.state.currentPage}/>
           <img src={logo} className="App-logo" alt="logo" />
           <div className="App-desc">
             <p>

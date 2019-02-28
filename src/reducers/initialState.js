@@ -5,5 +5,6 @@ export default {
       totalWins: 0,
       totalPulls: 0
     }
-  }
+  },
+  currentPage: "home"
 };

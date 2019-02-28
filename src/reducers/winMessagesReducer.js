@@ -6,10 +6,8 @@ export default function winMessages(state = initialState.winMessages, action) {
   switch (action.type) {
     case UPDATE_WIN_MESSAGE:
       newState = action.winMessages;
-      console.log('UPDATE_WIN_MESSAGE Action')
       return newState;
     case RESET_WIN_MESSAGE:
-      console.log('RESET_WIN_MESSAGE Action')
       return state;
     default:
       return state;
