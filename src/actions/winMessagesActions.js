@@ -6,10 +6,8 @@ function rand(randomMaxVal) {
   return Math.floor(Math.random() * randomMaxVal);
 }
 
-export function updateWinMessages(pullSummary) {
+function getWinMessage(randomNumber, pullSummary) {
   let winMessage = 'Undefined win message';
-  let randomNumber = rand(randomMax);
-  pullSummary.totalPulls = pullSummary.totalPulls + 1;
   if (randomNumber < 5) {
     winMessage = '7 Star EX!!! Congratulations!!!';
     pullSummary.totalWins = pullSummary.totalWins + 1;
@@ -23,6 +21,14 @@ export function updateWinMessages(pullSummary) {
   else {
     winMessage = 'Garbage! Pull again Dummy!';
   }
+  return winMessage;
+}
+
+export function updateWinMessages(pullSummary) {
+  let winMessage = 'Undefined win message';
+  let randomNumber = rand(randomMax);
+  pullSummary.totalPulls = pullSummary.totalPulls + 1;
+  winMessage = getWinMessage(randomNumber, pullSummary);
   let winMessages = {
     winMessage: winMessage,
     pullSummary: pullSummary

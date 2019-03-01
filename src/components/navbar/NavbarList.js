@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class NavbarList extends Component {
   constructor(props) {
@@ -9,25 +11,21 @@ class NavbarList extends Component {
   }
 
   render() {
-    if (this.state.currentPage !== "pullsim") {
+    if (this.state.currentPage !== "pull_sim") {
       return (
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item active">
-              <a className="nav-link" href="#">Pull Sim </a>
-            </li>
-          </ul>
-        </div>
+        <Nav>
+          <Nav.Link className="enabled">
+            <Link to={'/pull_sim'}>
+              Pull Sim
+            </Link>
+          </Nav.Link>
+        </Nav>
       );
     } else {
       return (
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a className="nav-link disabled" href="#">Pull Sim </a>
-            </li>
-          </ul>
-        </div>
+        <Nav>
+          <Nav.Link className="disabled">Pull Sim</Nav.Link>
+        </Nav>
       )
     }
   }

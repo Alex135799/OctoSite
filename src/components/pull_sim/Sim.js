@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
 import logo from '../../assets/logo.svg';
 import './Sim.css';
 
@@ -25,28 +26,28 @@ class Sim extends Component {
 
   resetButton() {
     if (this.props.winMessages.pullSummary.totalPulls === 0) {
-      return <button onClick={this.resetWinMessages}>Reset the Counters</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the Counters</Button>
     }
     else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 100) {
-      return <button onClick={this.resetWinMessages}>You win! Quit while you still can!</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>You win! Quit while you still can!</Button>
     }
     else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 75) {
-      return <button onClick={this.resetWinMessages}>Reset the decent Counters</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the decent Counters</Button>
     }
     else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 50) {
-      return <button onClick={this.resetWinMessages}>Reset the respectable Counters</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the respectable Counters</Button>
     }
     else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 0) {
-      return <button onClick={this.resetWinMessages}>Reset the shameful Counters</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the shameful Counters</Button>
     }
     else if (this.props.winMessages.pullSummary.totalPulls > 100) {
-      return <button onClick={this.resetWinMessages}>Reset these Counters, they are making me cry</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>Reset these Counters, they are making me cry</Button>
     }
     else if (this.props.winMessages.pullSummary.totalPulls > 1000) {
-      return <button onClick={this.resetWinMessages}>Reset these Counters, I can't even see through the tears</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>Reset these Counters, I can't even see through the tears</Button>
     }
     else {
-      return <button onClick={this.resetWinMessages}>Reset the Counters</button>
+      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the Counters</Button>
     }
   }
 
@@ -59,11 +60,11 @@ class Sim extends Component {
               onClick={this.updateWinMessages} />
           </a>
           <p>
-            {state.winMessages.winMessage}
+            {this.props.winMessages.winMessage}
           </p>
           <p>
-            Total number of pulls: {state.winMessages.pullSummary.totalPulls}.
-            Total number of actual wins: {state.winMessages.pullSummary.totalWins}.
+            Total number of pulls: {this.props.winMessages.pullSummary.totalPulls}.
+            Total number of actual wins: {this.props.winMessages.pullSummary.totalWins}.
           </p>
           {this.resetButton()}
         </header>
@@ -72,7 +73,7 @@ class Sim extends Component {
   }
 }
 
-Sim.PropTypes = {
+Sim.propTypes = {
   winMessageActions: PropTypes.object,
   winMessages: PropTypes.object
 }

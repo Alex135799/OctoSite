@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import logo from '../../assets/hanuka_blast.png';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './App.css';
 import Navbar from '../navbar/Navbar'
+import Home from '../home/Home'
+import Sim from '../pull_sim/Sim'
 
 class App extends Component {
   constructor(props) {
@@ -14,26 +16,21 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <Navbar currentPage={this.state.currentPage}/>
-          <img src={logo} className="App-logo" alt="logo" />
-          <div className="App-desc">
-            <p>
-              This isn't even Octo's final form!
-              <br />
-              <a
-                className="App-link"
-                href="https://www.twitch.tv/smellyoctopus"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Discover your inner Octopus.
-              </a>
-            </p>
-          </div>
-        </header>
-      </div>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            <Route exact={true} path="/" component={Navbar} />
+            <Route path="/:currentPage" render={({ match }) => (
+              <Navbar currentPage={match.params.currentPage} />
+            )} />
+          </header>
+          <body className="App-body">
+            <Route exact={true} path="/" component={Home} />
+            <Route path="/pull_sim" component={Sim} />
+          </body>
+          <footer className="App-footer" />
+        </div>
+      </Router>
     );
   }
 }
