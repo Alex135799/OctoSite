@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import logo from '../../assets/hanuka_blast.png';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     return (

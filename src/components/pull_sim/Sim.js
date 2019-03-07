@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import PullSimResetButton from './PullSimResetButton'
+import PullAnimation from './PullAnimation'
 import logo from '../../assets/logo.svg';
 import './Sim.css';
 
@@ -7,66 +8,45 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as winMessagesActions from '../../actions/winMessagesActions';
 import PropTypes from 'prop-types';
+import copyWinMessages from '../../common/copyWinMessages'
 
 class Sim extends Component {
   constructor(props) {
     super(props);
+    this.initialState = {
+      winMessages: copyWinMessages(this.props.winMessages)
+    }
     this.state = {
       winMessages: this.props.winMessages
     }
   }
 
   updateWinMessages = event => {
-    this.props.winMessagesActions.updateWinMessages(this.state.winMessages.pullSummary);
+    this.props.winMessagesActions.updateWinMessages(this.props.winMessages.pullSummary);
   }
 
   resetWinMessages = event => {
+    this.setState( { "winMessages": copyWinMessages(this.initialState.winMessages) } );
     this.props.winMessagesActions.resetWinMessages();
   }
 
-  resetButton() {
-    if (this.props.winMessages.pullSummary.totalPulls === 0) {
-      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the Counters</Button>
-    }
-    else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 100) {
-      return <Button variant="dark" onClick={this.resetWinMessages}>You win! Quit while you still can!</Button>
-    }
-    else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 75) {
-      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the decent Counters</Button>
-    }
-    else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 50) {
-      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the respectable Counters</Button>
-    }
-    else if (this.props.winMessages.pullSummary.totalWins * 100 / this.props.winMessages.pullSummary.totalPulls > 0) {
-      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the shameful Counters</Button>
-    }
-    else if (this.props.winMessages.pullSummary.totalPulls > 100) {
-      return <Button variant="dark" onClick={this.resetWinMessages}>Reset these Counters, they are making me cry</Button>
-    }
-    else if (this.props.winMessages.pullSummary.totalPulls > 1000) {
-      return <Button variant="dark" onClick={this.resetWinMessages}>Reset these Counters, I can't even see through the tears</Button>
-    }
-    else {
-      return <Button variant="dark" onClick={this.resetWinMessages}>Reset the Counters</Button>
-    }
-  }
-
   render() {
+    let totalPulls = this.props.winMessages.pullSummary.totalPulls;
+    let totalWins = this.props.winMessages.pullSummary.totalWins;
     return (
       <div className="Sim">
         <header className="Sim-header">
-          <a href="#">
-            <img src={logo} className="Sim-logo" alt="logo"
-              onClick={this.updateWinMessages} />
-          </a>
+          <img src={logo} className="Sim-logo" alt="logo"
+            onClick={this.updateWinMessages} />
+          <PullAnimation winType={this.props.winMessages.winType} />
           <p>
             {this.props.winMessages.winMessage}
           </p>
           <p>
-            Total number of pulls: {this.props.winMessages.pullSummary.totalPulls}.
-            Total number of actual wins: {this.props.winMessages.pullSummary.totalWins}.
+            Total number of pulls: {totalPulls}.
+            Total number of actual wins: {totalWins}.
           </p>
-          {this.resetButton()}
+          <PullSimResetButton totalPulls={totalPulls} totalWins={totalWins} onClick={this.resetWinMessages} />
         </header>
       </div>
     );
