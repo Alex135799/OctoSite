@@ -5,7 +5,13 @@
 .star {
   height: 100px;
   width: 100px;
-  left: -100px;
+  position: absolute;
+  left: -50px;
+}
+
+.stars {
+  position: relative;
+  height: 100px;
 }
 
 .Sim-logo {
@@ -16,7 +22,7 @@
 
 .Sim-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;

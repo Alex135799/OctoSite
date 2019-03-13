@@ -33,12 +33,13 @@ class Sim extends Component {
   render() {
     let totalPulls = this.props.winMessages.pullSummary.totalPulls;
     let totalWins = this.props.winMessages.pullSummary.totalWins;
+    let winType = this.props.winMessages.winType;
     return (
       <div className="Sim">
         <header className="Sim-header">
           <img src={logo} className="Sim-logo" alt="logo"
             onClick={this.updateWinMessages} />
-          <PullAnimation winType={this.props.winMessages.winType} />
+          <PullAnimation winType={winType} />
           <p>
             {this.props.winMessages.winMessage}
           </p>
