@@ -20,7 +20,7 @@ function getWinMessage(randomNumber, pullSummary) {
     winType = winTypes.FOUR_STARS;
   }
   else if (randomNumber < 350) {
-    winMessage = '3 Stars, could possibly be ok with a lot of investment...';
+    winMessage = '3 Stars, it\'s ok I guess...';
     winType = winTypes.THREE_STARS;
   }
   else if (randomNumber < 650) {

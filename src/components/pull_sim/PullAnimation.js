@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { VelocityComponent } from 'velocity-react'
 import * as winTypes from '../../common/winTypes';
-import logo from '../../assets/logo.svg';
+import star from '../../assets/star.svg';
 
 class PullAnimation extends Component {
   constructor(props) {
@@ -9,6 +9,7 @@ class PullAnimation extends Component {
     this.state = {
       winType: this.props.winType
     }
+    this.isClearingStars = false;
   }
 
   getNumberOfStars() {
@@ -32,23 +33,22 @@ class PullAnimation extends Component {
     let numberOfStars = this.getNumberOfStars();
     let stars = [];
     for (let i = 0; i < numberOfStars; i++) {
-      let delay= 1000 * i;
+      let delay = 1000 * i;
       if (i >= 3) {
         delay -= 1000;
       }
-      let xPos= -25 + i * 12.5;
-      xPos=xPos+"vw"
+      let xPos = -25 + i * 12.5;
+      xPos = xPos + "vw"
+      delay = 0;
       stars.push(
-      <VelocityComponent
-        runOnMount={true}
-        duration={1500}
-        delay={delay}
-        animation={{
-          translateX: [xPos, 0]
-        }}>
-
-        <img src={logo} className="star" alt="star" />
-
+        <VelocityComponent
+          runOnMount={true}
+          duration={0}
+          delay={delay}
+          animation={{
+            translateX: [xPos, 0]
+          }}>
+          <img src={star} className="star" alt="star" />
         </VelocityComponent>
       );
     }
@@ -56,7 +56,7 @@ class PullAnimation extends Component {
   }
 
   render() {
-    let stars = this.getStars();
+    let stars=this.getStars();
     return (
       <div className="stars">
         {stars}
