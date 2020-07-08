@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 class NavbarList extends Component {
   constructor(props) {
@@ -10,24 +9,27 @@ class NavbarList extends Component {
     }
   }
 
-  render() {
-    if (this.state.currentPage !== "pull_sim") {
-      return (
-        <Nav>
-          <Nav.Link className="enabled">
-            <Link to={'/pull_sim'}>
-              Pull Sim
-            </Link>
-          </Nav.Link>
-        </Nav>
-      );
-    } else {
-      return (
-        <Nav>
-          <Nav.Link className="disabled">Pull Sim</Nav.Link>
-        </Nav>
-      )
+  getIsEnabledClass(pagePath) {
+    if (this.props.currentPage !== pagePath) {
+      return "enabled";
     }
+    return "disabled";
+  }
+
+  render() {
+    let pullSimEnabledClass = this.getIsEnabledClass("pull_sim");
+    let queueEnabledClass = this.getIsEnabledClass("queue");
+    
+    return (
+      <Nav>
+        <Nav.Link href={'/pull_sim'} className={pullSimEnabledClass}>
+            Pull Sim
+        </Nav.Link>
+        <Nav.Link href={'/queue'} className={queueEnabledClass}>
+          Game Queue
+        </Nav.Link>
+      </Nav>
+    );
   }
 }
 

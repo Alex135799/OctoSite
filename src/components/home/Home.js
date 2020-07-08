@@ -10,13 +10,11 @@ class Home extends Component {
       <div>
         <img src={logo} className="App-logo" alt="logo" />
         <div className="App-desc">
-          <p>
             This isn't even Octo's final form!
             <br />
             <p className="underline">
-              Discover your inner Octopus.
+              Discover your inner Octopus below.
             </p>
-          </p>
           <div className="logos">
             <div className="logo">&nbsp;</div>
             <div className="logo">
