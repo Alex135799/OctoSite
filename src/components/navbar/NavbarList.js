@@ -21,7 +21,7 @@ class NavbarList extends Component {
     let queueEnabledClass = this.getIsEnabledClass("queue");
     
     return (
-      <Nav>
+      <Nav variant="pills">
         <Nav.Link href={'/pull_sim'} className={pullSimEnabledClass}>
             Pull Sim
         </Nav.Link>

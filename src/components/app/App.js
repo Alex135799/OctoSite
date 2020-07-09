@@ -34,7 +34,7 @@ class App extends Component {
               <Route path="/queue" component={Queue} />
               <Route path="/calendar" component={Calendar} />
               <Route path="/login/:redirectPath" render={({ match, location }) => (
-                <Login redirectPath={match.params.redirectPath} query={location.search}/>
+                <Login redirectPath={match.params.redirectPath} hash={location.hash}/>
               )} />
               <Route path="/login" render={({ match, location }) => (
                 <Login redirectPath="" hash={location.hash}/>

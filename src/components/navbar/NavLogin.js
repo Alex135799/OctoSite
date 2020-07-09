@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, NavDropdown, Nav } from 'react-bootstrap';
 import { cognitoUrl } from "../../common/constants/stringConstants";
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import * as loginActions from '../../actions/userActions';
+import * as userActions from '../../actions/userActions';
 
 class NavLogin extends Component {
   constructor(props) {
@@ -22,15 +22,30 @@ class NavLogin extends Component {
     window.location = cognitoUrlWithPath;
   }
 
+  logout = () => {
+    this.props.userActions.logout();
+  }
+
   render() {
-    return (
-      <Button variant="secondary" onClick={this.login} disabled={this.props.user.loggedIn}>Login</Button>
-    );
+    if (this.props.user.loggedIn) {
+      return (
+        <Nav>
+          <NavDropdown title={this.props.user.loggedIn ? this.props.user.idInfo["cognito:username"] : null} id="nav-user-dropdown">
+            <NavDropdown.Item onClick={this.logout} >Logout</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      );
+    }
+    else {
+      return (
+        <Button variant="secondary" onClick={this.login}>Login</Button>
+      );
+    }
   }
 }
 
 NavLogin.propTypes = {
-  loginActions: PropTypes.object,
+  userActions: PropTypes.object,
   user: PropTypes.object
 }
 
@@ -42,7 +57,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    loginActions: bindActionCreators(loginActions, dispatch)
+    userActions: bindActionCreators(userActions, dispatch)
   };
 }
 

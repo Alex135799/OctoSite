@@ -18,19 +18,20 @@ class _Navbar extends Component {
     return (
       <Navbar expand="lg" bg="dark" variant="dark">
         <Navbar.Brand>
-        <Link to={'/'} style={{ textDecoration: 'none' }}>
-          <img src={logo} width="30" height="30" alt="" />
-        </Link>
-        <Link to={'/'} style={{ textDecoration: 'none' }}>
-          &nbsp;&nbsp;{'OctoSite'}
-        </Link>
+          <Link to={'/'} style={{ textDecoration: 'none' }}>
+            <img src={logo} width="30" height="30" alt="" />
+          </Link>
+          <Link to={'/'} style={{ textDecoration: 'none' }}>
+            &nbsp;&nbsp;{'OctoSite'}
+          </Link>
         </Navbar.Brand>
+
         <NavLogin currentPage={this.props.currentPage}/>
+
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
+        <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
           <NavbarList currentPage={this.props.currentPage}/>
         </Navbar.Collapse>
-
       </Navbar>
     );
   }

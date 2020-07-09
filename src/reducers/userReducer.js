@@ -1,6 +1,6 @@
 import initialState from './initialState';
 import { copyUser } from '../common/copy_objects/copyUser'
-import { LOGIN } from '../actions/actionTypes';
+import { LOGIN, LOGOUT } from '../actions/actionTypes';
 import { userCookieName } from "../common/constants/stringConstants";
 import jwt_decode from "jwt-decode";
 import Cookie from "universal-cookie";
@@ -17,6 +17,10 @@ export function user(state = initialState, action) {
       let jwtCookie = { accessToken: action.accessToken, idToken: action.idToken };
       cookie.set(userCookieName, jwtCookie, {path: '/', expires: new Date(idInfo.exp * 1000)});
       stateUserCopy = loginUser;
+      break;
+    case LOGOUT:
+      cookie.remove(userCookieName);
+      stateUserCopy = copyUser(initialState.user);
       break;
     default:
       if (!state.user.loggedIn) {
