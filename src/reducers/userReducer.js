@@ -23,7 +23,7 @@ export function user(state = initialState, action) {
       stateUserCopy = copyUser(initialState.user);
       break;
     default:
-      if (!state.user.loggedIn) {
+      if (!state.user || !state.user.loggedIn) {
         let userCookie = cookie.get(userCookieName);
         if (userCookie) {
           let accessInfo = jwt_decode(userCookie.accessToken);

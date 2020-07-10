@@ -15,6 +15,7 @@ class Queue extends Component {
     super(props);
 
     this.state = {
+      user: this.props.user,
       queue: this.props.queue
     }
   }
@@ -37,7 +38,7 @@ class Queue extends Component {
 
     return (
       <div className="container" id="queueRoot">
-        <SessionInfo session={this.props.queue.session} queueActions={this.props.queueActions} />
+        <SessionInfo session={this.props.queue.session} queueActions={this.props.queueActions} user={this.props.user} />
         <Table striped bordered responsive size="sm" variant="light">
           <thead>
             <tr>
@@ -58,12 +59,14 @@ class Queue extends Component {
 
 Queue.propTypes = {
   queueActions: PropTypes.object,
-  queue: PropTypes.object
+  queue: PropTypes.object,
+  user: PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
-    queue: state.queue
+    queue: state.queue,
+    user: state.user
   };
 }
 

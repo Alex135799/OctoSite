@@ -7,3 +7,4 @@ let cognitoAuthCallbackUrl = "redirect_uri=http://localhost:3000/login";
 export var cognitoUrl = cognitoAuthBase + cognitoAuthQueryParams + cognitoAuthCallbackUrl;
 
 export var userCookieName = "octosite.ooglopbot.user"
+export var queueSessionCookieName = "octosite.ooglopbot.queue.session"
