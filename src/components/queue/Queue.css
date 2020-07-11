@@ -1,0 +1,16 @@
+.Queue {
+  text-align: center;
+}
+
+.session {
+  text-align: left
+}
+
+.sessionCloseBtn {
+  text-align: right
+}
+
+.scroll-table {
+  height: 450px;
+  overflow-x: auto;
+}
