@@ -43,6 +43,7 @@ class SessionFormModal extends Component {
       let response = await axios.post(backendUrl + "queue", JSON.stringify(this.sessionFormInfo));
       this.sessionFormInfo.sessionId = response.data.sessionId;
       this.state.queueActions.addSession(this.sessionFormInfo);
+      this.props.queueActions.addToQueue([]);
     } catch (error) {
       if (!error.response) {
         console.error(JSON.stringify(error));

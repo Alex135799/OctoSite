@@ -6,7 +6,7 @@ import { queueEmptyString, queueLoadingString, queueNoSessionString } from "../.
 import './Queue.css';
 import { backendUrl } from "../../common/constants/stringConstants";
 import axios from "axios";
-import {DateTime} from "luxon";
+import { DateTime } from "luxon";
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -39,20 +39,20 @@ class Queue extends Component {
         )
       }
       if (queue.session.sessionId) {
-      return (
-        <tr key={1}>
-          <td>1</td>
-          <td colSpan={3}>{queueEmptyString}</td>
-        </tr>
-      )
-    } else {
-      return (
-        <tr key={1}>
-          <td>1</td>
-          <td colSpan={3}>{queueNoSessionString}</td>
-        </tr>
-      )
-    }
+        return (
+          <tr key={1}>
+            <td>1</td>
+            <td colSpan={3}>{queueEmptyString}</td>
+          </tr>
+        )
+      } else {
+        return (
+          <tr key={1}>
+            <td>1</td>
+            <td colSpan={3}>{queueNoSessionString}</td>
+          </tr>
+        )
+      }
     }
 
     let tableRows = queue.list.map((entry, tableRowInd) => {
@@ -75,19 +75,21 @@ class Queue extends Component {
     return (
       <div className="container" id="queueRoot">
         <SessionInfo queue={this.props.queue} queueActions={this.props.queueActions} user={this.props.user} />
-        <Table striped bordered responsive size="sm" variant="light">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Discord Name</th>
-              <th>Twitch Name</th>
-              <th>Time Entered</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableRows}
-          </tbody>
-        </Table>
+        <div class="scroll-table">
+          <Table striped bordered responsive size="sm" variant="light">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Discord Name</th>
+                <th>Twitch Name</th>
+                <th>Time Entered</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableRows}
+            </tbody>
+          </Table>
+        </div>
       </div>
     )
   }

@@ -9,3 +9,8 @@
 .sessionCloseBtn {
   text-align: right
 }
+
+.scroll-table {
+  height: 450px;
+  overflow-x: auto;
+}
