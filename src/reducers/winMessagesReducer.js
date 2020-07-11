@@ -1,5 +1,5 @@
 import initialState from './initialState';
-import copyWinMessages from '../common/copy_objects/copyWinMessages'
+import copyWinMessages from '../common/copyWinMessages'
 import {UPDATE_WIN_MESSAGE, RESET_WIN_MESSAGE} from '../actions/actionTypes';
 
 export default function winMessages(state = initialState, action) {
