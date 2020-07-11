@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Button, Container } from "react-bootstrap";
 import SessionFormModal from "./SessionFormModal";
-import { copySession } from "../../common/copy_objects/copyQueue";
+import SessionActions from './SessionActions';
 
 class SessionInfo extends Component {
   constructor(props) {
@@ -9,18 +9,45 @@ class SessionInfo extends Component {
 
     this.state = {
       user: this.props.user,
-      session: this.props.session,
+      session: this.props.queue.session,
       queueActions: this.props.queueActions,
-      showCreateSessionModal: false
+      showCreateSessionModal: false,
+      showRemoveSessionConfirmationModal: false,
+      showConnectBotModal: false
     }
-
-    this.toggleSessionModal = this.toggleSessionModal.bind(this);
   }
 
-  toggleSessionModal() {
+  toggleSessionModal = () => {
     let newShowCreateSessionModal = !this.state.showCreateSessionModal;
-    let sessionCopy = copySession(this.state.session);
-    this.setState({ session: sessionCopy, showCreateSessionModal: newShowCreateSessionModal });
+    this.setState({
+      user: this.state.user,
+      session: this.state.session, 
+      showRemoveSessionConfirmationModal: this.state.showRemoveSessionConfirmationModal,
+      showConnectBotModal: this.state.showConnectBotModal,
+      showCreateSessionModal: newShowCreateSessionModal
+    });
+  }
+
+  toggleRemoveSessionConfirmationModal = () => {
+    let newShowRemoveSessionConfirmationModal = !this.state.showRemoveSessionConfirmationModal;
+    this.setState({
+      session: this.state.session, 
+      user: this.state.user, 
+      showCreateSessionModal: this.state.showCreateSessionModal,
+      showConnectBotModal: this.state.showConnectBotModal,
+      showRemoveSessionConfirmationModal: newShowRemoveSessionConfirmationModal 
+    });
+  }
+
+  toggleConnectBotModal = () => {
+    let newShowConnectBotModal = !this.state.showConnectBotModal;
+    this.setState({
+      session: this.state.session, 
+      user: this.state.user, 
+      showCreateSessionModal: this.state.showCreateSessionModal, 
+      showRemoveSessionConfirmationModal: this.state.newShowRemoveSessionConfirmationModal,
+      showConnectBotModal: newShowConnectBotModal
+    });
   }
 
   isUserAdmin = () => {
@@ -40,29 +67,40 @@ class SessionInfo extends Component {
   render() {
     return (
       <div>
-        <Alert variant="danger" id="sessionAlert" hidden={!this.props.session.error}>
-          {this.props.session.error}
+        <Alert variant="danger" id="sessionAlert" hidden={!this.props.queue.session.error}>
+          {this.props.queue.session.error}
         </Alert>
-        <Container className="container session" id="sessionInfoRoot" hidden={this.props.session.id}>
+        <Container className="container session" id="sessionInfoRoot" hidden={this.props.queue.session.sessionId}>
           <Alert variant="dark" id="sessionAlert">
             No active session.&nbsp;&nbsp;&nbsp;&nbsp;
             <Button variant="dark" onClick={this.toggleSessionModal} hidden={!this.isUserAdmin()}>Create Session</Button>
           </Alert>
         </Container>
-        <Container className="container session" id="sessionInfoRoot" hidden={!this.props.session.id}>
+        <Container className="container session" id="sessionInfoRoot" hidden={!this.props.queue.session.sessionId}>
           <Alert variant="dark" id="sessionAlert">
+            <SessionActions 
+              hidden = {!this.isUserAdmin()}
+              queue={this.props.queue}
+              queueActions={this.state.queueActions}
+              toggleSessionModal={this.toggleSessionModal}
+              toggleRemoveSessionConfirmationModal={this.toggleRemoveSessionConfirmationModal}
+              toggleConnectBotModal={this.toggleConnectBotModal}/>
             <p>
-              {this.props.session.player} currently playing:
+              {this.props.queue.session.player} currently playing:
             </p>
-            {this.props.session.name}
+            {this.props.queue.session.name}
           </Alert>
         </Container>
 
         <SessionFormModal
-          session={this.props.session}
+          session={this.props.queue.session}
           queueActions={this.state.queueActions}
           showCreateSessionModal={this.state.showCreateSessionModal}
+          showConnectBotModal={this.state.showConnectBotModal}
+          showRemoveSessionConfirmationModal={this.state.showRemoveSessionConfirmationModal}
           toggleSessionModal={this.toggleSessionModal}
+          toggleRemoveSessionConfirmationModal={this.toggleRemoveSessionConfirmationModal}
+          toggleConnectBotModal={this.toggleConnectBotModal}
           userId={this.getUserId()} />
       </div>
     )

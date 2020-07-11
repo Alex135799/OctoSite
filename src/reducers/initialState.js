@@ -1,5 +1,3 @@
-import {queueSessionLoadingString} from "../common/constants/stringConstants"
-
 export default {
   winMessages: {
     winMessage: 'Gattcha Sim. Press the big rotating atom to pull.',
@@ -11,11 +9,7 @@ export default {
   },
   queue: {
     session: {},
-    list: [
-      {
-        name: queueSessionLoadingString
-      }
-    ]
+    list: []
   },
   calendar: {
     form: {
