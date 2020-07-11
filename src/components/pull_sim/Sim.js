@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as winMessagesActions from '../../actions/winMessagesActions';
 import PropTypes from 'prop-types';
-import copyWinMessages from '../../common/copyWinMessages'
+import copyWinMessages from '../../common/copy_objects/copyWinMessages'
 
 class Sim extends Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class Sim extends Component {
     this.initialState = {
       winMessages: copyWinMessages(this.props.winMessages)
     }
+
     this.state = {
       winMessages: this.props.winMessages
     }
@@ -55,7 +56,7 @@ class Sim extends Component {
 }
 
 Sim.propTypes = {
-  winMessageActions: PropTypes.object,
+  winMessagesActions: PropTypes.object,
   winMessages: PropTypes.object
 }
 
