@@ -1,6 +1,7 @@
 export var queueEmptyString = "No Entries In Queue...";
 export var queueLoadingString = "Loading Queue...";
 export var queueNoSessionString = "Currently no open sessions...";
+export var queueLoadingSessionsString = "Loading sessions...";
 
 let cognitoAuthBase = "https://smellyoctopus.auth.us-east-1.amazoncognito.com/login?"
 let cognitoAuthQueryParams = "client_id=6m4jqicvparrk3i6q637tihotm&response_type=token&scope=email+openid+profile&";
@@ -11,3 +12,5 @@ export var backendUrl = "https://k301suduv8.execute-api.us-east-1.amazonaws.com/
 
 export var userCookieName = "octosite.ooglopbot.user"
 export var queueSessionCookieName = "octosite.ooglopbot.queue.session"
+
+export var octoUserId = "1";

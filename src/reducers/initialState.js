@@ -9,6 +9,7 @@ export default {
   },
   queue: {
     session: {},
+    sessionOptions: [],
     list: []
   },
   calendar: {

@@ -8,7 +8,8 @@ class SessionActions extends Component {
     super(props);
 
     this.state = {
-      session: this.props.queue.session
+      session: this.props.queue.session,
+      isModifyingList: false
     }
 
     this.loadInNumber = 1;
@@ -19,6 +20,10 @@ class SessionActions extends Component {
   changeBringBackNumber = event => { this.bringBackNumber = event.target.value; }
 
   loadIn = async () => {
+    this.setState({
+      session: this.props.queue.session,
+      isModifyingList: true
+    })
     try {
       let queueListCopy = this.props.queue.list.slice();
       if (queueListCopy.length < this.loadInNumber) this.loadInNumber = queueListCopy.length;
@@ -34,6 +39,10 @@ class SessionActions extends Component {
         this.props.queueActions.addSessionError(error.response.data);
       }
     }
+    this.setState({
+      session: this.props.queue.session,
+      isModifyingList: false
+    })
   }
 
   activateEntry = async (entry, activeStatus) => {
@@ -44,6 +53,10 @@ class SessionActions extends Component {
   }
 
   bringBack = async () => {
+    this.setState({
+      session: this.props.queue.session,
+      isModifyingList: true
+    })
     try {
       let toAdd = await axios.get(backendUrl + "queue/entry?sessionId=" + this.state.session.sessionId + "&active=false&limit=" + this.bringBackNumber + "&reverse=true");
       let toBringBack = toAdd.data.Items;
@@ -60,7 +73,10 @@ class SessionActions extends Component {
       } else {
         this.props.queueActions.addSessionError(error.response.data);
       }
-    }
+    }this.setState({
+      session: this.props.queue.session,
+      isModifyingList: false
+    })
   }
 
   render() {
@@ -73,7 +89,7 @@ class SessionActions extends Component {
             </Button>
             <Button variant="dark" id="connectBot" className="col-3" onClick={this.props.toggleConnectBotModal} >
               Connect Bot
-          </Button>
+            </Button>
             <Button variant="dark" id="removeSession" className="col-3" onClick={this.props.toggleRemoveSessionConfirmationModal} >
               Remove Session
           </Button>
@@ -96,17 +112,17 @@ class SessionActions extends Component {
 
         <ButtonToolbar className="mb-3 col-12 d-none d-md-block">
           <ButtonGroup className="col-6 justify-content-start">
-            <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn}>
-              Let In:
+            <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} disabled={this.state.isModifyingList}>
+              {this.state.isModifyingList ? "Working..." : "Let In:"}
           </Button>
             <InputGroup className="col-5" onChange={this.changeLoadInNumber} >
               <FormControl type="number" defaultValue={this.loadInNumber} />
             </InputGroup>
           </ButtonGroup>
           <ButtonGroup className="col-6 justify-content-end">
-            <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.bringBack} >
-              Bring Back:
-          </Button>
+            <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.bringBack} disabled={this.state.isModifyingList} >
+              {this.state.isModifyingList ? "Working..." : "Bring Back:"}
+            </Button>
             <InputGroup className="col-5" onChange={this.changeBringBackNumber} >
               <FormControl type="number" defaultValue={this.bringBackNumber} />
             </InputGroup>
@@ -114,17 +130,17 @@ class SessionActions extends Component {
         </ButtonToolbar>
         <ButtonToolbar className="mb-3 col-12 d-block d-md-none">
           <ButtonGroup className="col-12 justify-content-start">
-            <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} >
-              Let In:
-          </Button>
+            <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} disabled={this.state.isModifyingList}>
+              {this.state.isModifyingList ? "Working..." : "Let In:"}
+            </Button>
             <InputGroup className="col-6" onChange={this.changeLoadInNumber} >
               <FormControl type="number" defaultValue={this.loadInNumber} />
             </InputGroup>
           </ButtonGroup>
           <ButtonGroup className="col-12 justify-content-end">
-            <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.bringBack} >
-              Bring Back:
-          </Button>
+            <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.bringBack} disabled={this.state.isModifyingList} >
+              {this.state.isModifyingList ? "Working..." : "Bring Back:"}
+            </Button>
             <InputGroup className="col-6" onChange={this.changeBringBackNumber} >
               <FormControl type="number" defaultValue={this.bringBackNumber} />
             </InputGroup>

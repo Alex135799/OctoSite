@@ -11,6 +11,10 @@ export function addToQueue(data) {
   return { type: types.ADD_TO_QUEUE, list: data };
 }
 
+export function addSessionOptions(data) {
+  return { type: types.ADD_SESSION_OPTIONS, list: data };
+}
+
 export function loadIn(numToLoadIn, queueList) {
   return { type: types.LOAD_IN, numToLoadIn: numToLoadIn, list: queueList };
 }
