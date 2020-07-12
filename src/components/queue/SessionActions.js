@@ -66,7 +66,7 @@ class SessionActions extends Component {
   render() {
     return (
       <div hidden={this.props.hidden}>
-        <ButtonToolbar className="mb-3 d-none d-sm-block" >
+        <ButtonToolbar className="mb-3 d-none d-md-block" >
           <ButtonGroup className="mr-2 col-12 justify-content-center" >
             <Button variant="dark" id="newSession" className="col-3" onClick={this.props.toggleSessionModal} >
               New Session
@@ -79,7 +79,7 @@ class SessionActions extends Component {
           </Button>
           </ButtonGroup>
         </ButtonToolbar>
-        <ButtonToolbar className="mb-3 d-block d-sm-none" >
+        <ButtonToolbar className="mb-3 d-block d-md-none" >
           <ButtonGroup className="mr-2 col-12 justify-content-center" >
             <Button variant="dark" id="newSession" className="col-4" onClick={this.props.toggleSessionModal} >
               New
@@ -94,7 +94,7 @@ class SessionActions extends Component {
         </ButtonToolbar>
 
 
-        <ButtonToolbar className="mb-3 col-12 d-none d-sm-block">
+        <ButtonToolbar className="mb-3 col-12 d-none d-md-block">
           <ButtonGroup className="col-6 justify-content-start">
             <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn}>
               Let In:
@@ -112,18 +112,18 @@ class SessionActions extends Component {
             </InputGroup>
           </ButtonGroup>
         </ButtonToolbar>
-        <ButtonToolbar className="mb-3 col-12 d-block d-sm-none">
-          <ButtonGroup className="col-6 justify-content-start">
+        <ButtonToolbar className="mb-3 col-12 d-block d-md-none">
+          <ButtonGroup className="col-12 justify-content-start">
             <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} >
-              In:
+              Let In:
           </Button>
             <InputGroup className="col-6" onChange={this.changeLoadInNumber} >
               <FormControl type="number" defaultValue={this.loadInNumber} />
             </InputGroup>
           </ButtonGroup>
-          <ButtonGroup className="col-6 justify-content-end">
+          <ButtonGroup className="col-12 justify-content-end">
             <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.bringBack} >
-              Back:
+              Bring Back:
           </Button>
             <InputGroup className="col-6" onChange={this.changeBringBackNumber} >
               <FormControl type="number" defaultValue={this.bringBackNumber} />

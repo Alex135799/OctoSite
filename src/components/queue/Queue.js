@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from "react-bootstrap";
+import { Table, Container } from "react-bootstrap";
 import * as queueActions from '../../actions/queueActions';
 import SessionInfo from './SessionInfo';
 import { queueEmptyString, queueLoadingString, queueNoSessionString } from "../../common/constants/stringConstants"
@@ -16,12 +16,50 @@ class Queue extends Component {
   constructor(props) {
     super(props);
 
+    window.addEventListener("resize", this.changeTableHeight);
+
     this.state = {
       user: this.props.user,
       queue: this.props.queue
     }
 
     this.initiallyLoadingQueue = false;
+    this.tableFillRatio = .7;
+    this.primaryElementName = "sessionInfoRoot";
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    let sesionInfoHeight = document.getElementById(this.primaryElementName).clientHeight;
+    if (prevState.sesionInfoHeight !== sesionInfoHeight) {
+      this.changeTableHeight();
+    }
+  }
+
+  componentDidMount() {
+    this.changeTableHeight();
+  }
+
+  changeTableHeight = () => {
+    let sesionInfoHeight = document.getElementById(this.primaryElementName).clientHeight;
+    console.log(sesionInfoHeight);
+    let windowHeight = window.innerHeight;
+    let availableHeight = windowHeight - sesionInfoHeight;
+    let tableHeight = availableHeight * this.tableFillRatio;
+    this.setState({
+      user: this.props.user,
+      queue: this.props.queue,
+      tableHeight: tableHeight,
+      sesionInfoHeight: sesionInfoHeight
+    });
+  }
+
+  getTableMessage(message) {
+    return (
+      <tr key={1}>
+        <td>1</td>
+        <td colSpan={3}>{message}</td>
+      </tr>
+    )
   }
 
   getTableRows(queue) {
@@ -31,27 +69,12 @@ class Queue extends Component {
           this.props.queueActions.addToQueue(response.data.Items)
         });
         this.initiallyLoadingQueue = true;
-        return (
-          <tr key={1}>
-            <td>1</td>
-            <td colSpan={3}>{queueLoadingString}</td>
-          </tr>
-        )
+        return this.getTableMessage(queueLoadingString);
       }
       if (queue.session.sessionId) {
-        return (
-          <tr key={1}>
-            <td>1</td>
-            <td colSpan={3}>{queueEmptyString}</td>
-          </tr>
-        )
+        return this.getTableMessage(queueEmptyString);
       } else {
-        return (
-          <tr key={1}>
-            <td>1</td>
-            <td colSpan={3}>{queueNoSessionString}</td>
-          </tr>
-        )
+        return this.getTableMessage(queueNoSessionString);
       }
     }
 
@@ -73,9 +96,9 @@ class Queue extends Component {
     let tableRows = this.getTableRows(this.props.queue);
 
     return (
-      <div className="container" id="queueRoot">
+      <Container id="queueRoot">
         <SessionInfo queue={this.props.queue} queueActions={this.props.queueActions} user={this.props.user} />
-        <div class="scroll-table">
+        <div className="scroll-table" style={{height: this.state.tableHeight}} >
           <Table striped bordered responsive size="sm" variant="light">
             <thead>
               <tr>
@@ -90,7 +113,7 @@ class Queue extends Component {
             </tbody>
           </Table>
         </div>
-      </div>
+      </Container>
     )
   }
 }
