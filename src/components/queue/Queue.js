@@ -47,7 +47,7 @@ class Queue extends Component {
       });
     }
     else {
-      this.setupWebSocket();
+      this.setupWebSocket(this.props.queueActions);
     }
   }
 
