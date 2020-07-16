@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Table, Container, Button } from "react-bootstrap";
 import * as queueActions from '../../actions/queueActions';
 import SessionInfo from './SessionInfo';
-import { queueEmptyString, queueLoadingString, queueNoSessionString, backendUrl, octoUserId, queueLoadingSessionsString } from "../../common/constants/stringConstants"
+import { queueEmptyString, queueLoadingString, queueNoSessionString, backendUrl, octoUserId, queueLoadingSessionsString, websocketUrl } from "../../common/constants/stringConstants"
 import './Queue.css';
 import axios from "axios";
 import { DateTime } from "luxon";
+import * as ws from "websocket";
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -18,14 +19,63 @@ class Queue extends Component {
     window.addEventListener("resize", this.changeTableHeight);
 
     this.state = {
+      socketConnectionSetUp: false,
+      socketConnectionToggledOff: false,
       user: this.props.user,
-      queue: this.props.queue
+      queue: this.props.queue,
+      tableHeight: 0,
+      sesionInfoHeight: 0
     }
 
     this.initiallyLoadingQueue = false;
     this.initiallyLoadingSessions = false;
     this.tableFillRatio = .7;
     this.primaryElementName = "sessionInfoRoot";
+    this.client = {};
+  }
+
+  toggleWebSocket = () => {
+    if (this.state.socketConnectionSetUp) {
+      this.client.close();
+      this.setState({
+        socketConnectionSetUp: false,
+        socketConnectionToggledOff: true,
+        user: this.props.user,
+        queue: this.props.queue,
+        tableHeight: this.state.tableHeight,
+        sesionInfoHeight: this.state.sesionInfoHeight
+      });
+    }
+    else {
+      this.setupWebSocket();
+    }
+  }
+
+  setupWebSocket = (queueActions) => {
+    this.client = new ws.w3cwebsocket(websocketUrl);
+
+    this.client.onerror = function(err) {
+      console.log("WebSocket Connection Error");
+    }
+    this.client.onopen = function(msg) {
+      console.log("WebSocket Connected");
+    }
+    this.client.onclose = function(msg) {
+      console.log("WebSocket Closed");
+      this.socketConnectionSetUp = false;
+    }
+    this.client.onmessage = function(message) {
+      queueActions.addToQueue([JSON.parse(message.data)]);
+    }
+
+    this.setState({
+      socketConnectionSetUp: true,
+      socketConnectionToggledOff: this.state.socketConnectionToggledOff,
+      user: this.props.user,
+      queue: this.props.queue,
+      tableHeight: this.state.tableHeight,
+      sesionInfoHeight: this.state.sesionInfoHeight
+    });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -48,14 +98,16 @@ class Queue extends Component {
       user: this.props.user,
       queue: this.props.queue,
       tableHeight: tableHeight,
-      sesionInfoHeight: sesionInfoHeight
+      sesionInfoHeight: sesionInfoHeight,
+      socketConnectionSetUp: this.state.socketConnectionSetUp,
+      socketConnectionToggledOff: this.state.socketConnectionToggledOff
     });
   }
 
   loadSessionEntries(sessionId) {
     this.initiallyLoadingQueue = true;
     axios.get(backendUrl + "queue/entry?sessionId=" + sessionId + "&active=true").then((response) => {
-      this.props.queueActions.addToQueue(response.data.Items)
+      this.props.queueActions.replaceQueue(response.data.Items)
     });
   }
 
@@ -75,6 +127,9 @@ class Queue extends Component {
   }
 
   getEntryRows(list) {
+    if (!this.state.socketConnectionSetUp && !this.state.socketConnectionToggledOff) {
+      this.setupWebSocket(this.props.queueActions);
+    }
     let tableRows = list.map((entry, tableRowInd) => {
       tableRowInd++;
       return (
@@ -144,7 +199,7 @@ class Queue extends Component {
 
     return (
       <tr>
-        <th>#</th>
+        <th className={this.state.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
         <th>Twitch Name</th>
         <th>Time Entered</th>
       </tr>

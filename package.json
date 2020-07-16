@@ -20,7 +20,8 @@
     "redux-thunk": "^2.3.0",
     "simple-react-calendar": "^2.2.7",
     "universal-cookie": "^4.0.3",
-    "velocity-react": "^1.4.3"
+    "velocity-react": "^1.4.3",
+    "websocket": "^1.0.31"
   },
   "scripts": {
     "start": "react-scripts start",

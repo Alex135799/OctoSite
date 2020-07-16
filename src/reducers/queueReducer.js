@@ -29,6 +29,12 @@ export function queue(state = initialState, action) {
       stateQueueCopy.session.error = action.error;
       break;
     case types.ADD_TO_QUEUE:
+      for (var i=0; i<action.list.length; i++) {
+        stateQueueCopy.list.push(action.list[i]);
+      }
+      stateQueueCopy.session.error = null;
+      break;
+    case types.REPLACE_QUEUE:
       stateQueueCopy.list = action.list;
       stateQueueCopy.session.error = null;
       break;
@@ -37,15 +43,15 @@ export function queue(state = initialState, action) {
       stateQueueCopy.session.error = null;
       break;
     case types.LOAD_IN:
-      for (var i = 0; i < action.numToLoadIn; i++) {
+      for (var j = 0; j < action.numToLoadIn; j++) {
         action.list.shift();
       }
       stateQueueCopy.session.error = null;
       stateQueueCopy.list = action.list;
       break;
     case types.BRING_BACK:
-      for (var j = 0; j < action.toBringBack.length; j++) {
-        action.list.unshift(action.toBringBack[j]);
+      for (var k = 0; k < action.toBringBack.length; k++) {
+        action.list.unshift(action.toBringBack[k]);
       }
       stateQueueCopy.list = action.list;
       break;
