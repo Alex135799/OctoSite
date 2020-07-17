@@ -28,7 +28,7 @@ function getWinMessage(randomNumber, pullSummary) {
     winType = winTypes.TWO_STARS;
   }
   else {
-    winMessage = 'Garbage! Pull again Dummy!';
+    winMessage = 'Garbage!';
     winType = winTypes.ONE_STAR;
   }
   return {"winMessage": winMessage, "winType": winType};
