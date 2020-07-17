@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import logo from '../../assets/hanuka_blast.png';
 import yt_icon from '../../assets/youtube_icon.svg';
 import twitch_icon from '../../assets/twitch_icon.svg';
+import instagram_icon from '../../assets/instagram_icon.svg';
+import { Container, Row, Col } from 'react-bootstrap';
 
 class Home extends Component {
 
@@ -15,9 +17,9 @@ class Home extends Component {
             <p className="underline">
               Discover your inner Octopus below.
             </p>
-          <div className="logos">
-            <div className="logo">&nbsp;</div>
-            <div className="logo">
+          <Container className="logos">
+            <Row>
+            <Col className="logo">
               <a
                 className="App-link"
                 href="https://www.twitch.tv/smellyoctopus"
@@ -26,8 +28,8 @@ class Home extends Component {
                 >
                 <img src={twitch_icon} className="twitch-logo" alt="twitch-logo" />
               </a>
-            </div>
-            <div className="logo" >
+            </Col>
+            <Col className="logo" >
               <a
                 className="App-link"
                 href="https://www.youtube.com/user/Smelly0ctopus"
@@ -36,9 +38,19 @@ class Home extends Component {
                 >
                 <img src={yt_icon} className="youtube-logo" alt="youtube-logo" />
               </a>
-            </div>
-            <div className="logo">&nbsp;</div>
-          </div>
+            </Col>
+            <Col className="logo">
+              <a
+                className="App-link"
+                href="https://www.instagram.com/smellyocto/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                <img src={instagram_icon} className="instagram-logo" alt="instagram-logo" />
+              </a>
+            </Col>
+            </Row>
+          </Container>
         </div>
       </div>
     );
