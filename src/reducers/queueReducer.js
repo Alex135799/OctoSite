@@ -34,6 +34,18 @@ export function queue(state = initialState, action) {
       }
       stateQueueCopy.session.error = null;
       break;
+    case types.REMOVE_FROM_QUEUE:
+      for (var actionInd=0; actionInd<action.list.length; actionInd++) {
+        for (var stateQueueInd=0; stateQueueInd<stateQueueCopy.list.length; stateQueueInd++) {
+          let queueEntry = stateQueueCopy.list[stateQueueInd];
+          let actionEntry = action.list[actionInd];
+          if (actionEntry.createdAt === queueEntry.createdAt) {
+            stateQueueCopy.list.splice(stateQueueInd, 1);
+          }
+        }
+      }
+      stateQueueCopy.session.error = null;
+      break;
     case types.REPLACE_QUEUE:
       stateQueueCopy.list = action.list;
       stateQueueCopy.session.error = null;

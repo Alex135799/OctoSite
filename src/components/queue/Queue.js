@@ -65,7 +65,12 @@ class Queue extends Component {
       this.socketConnectionSetUp = false;
     }
     this.client.onmessage = function(message) {
-      queueActions.addToQueue([JSON.parse(message.data)]);
+      let messageData = JSON.parse(message.data);
+      if (messageData.action && messageData.action === "add") {
+        queueActions.addToQueue([messageData]);
+      } else if (messageData.action && messageData.action === "remove") {
+        queueActions.removeFromQueue([messageData]);
+      }
     }
 
     this.setState({

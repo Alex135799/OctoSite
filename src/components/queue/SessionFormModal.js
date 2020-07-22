@@ -17,7 +17,7 @@ class SessionFormModal extends Component {
     this.sessionFormInfo = {};
     this.sessionFormInfo.streamName = "smellyoctopus";
     this.sessionFormInfo.discordGuildId = "249846152223129602";
-    this.entryLimitMax = 100;
+    this.entryLimitMax = 1;
     this.queueLimitMax = 1000;
   }
 
@@ -126,14 +126,14 @@ class SessionFormModal extends Component {
                   <Form.Group controlId="numberEntriesAllowed">
                     <Form.Label>Entry Number Limit</Form.Label>
                     <Form.Control type="number" onChange={this.updateEntryLimit} />
-                    <Form.Text className="text-muted">Leave blank for max.</Form.Text>
+                    <Form.Text className="text-muted">Leave blank for just once.</Form.Text>
                   </Form.Group>
                 </Col>
                 <Col xs={6}>
                   <Form.Group controlId="numberAllowedPerPlay">
                     <Form.Label>Queue Size Limit</Form.Label>
                     <Form.Control type="number" onChange={this.updateQueueLimit} />
-                    <Form.Text className="text-muted">Leave blank for max.</Form.Text>
+                    <Form.Text className="text-muted">Leave blank for max (1000).</Form.Text>
                   </Form.Group>
                 </Col>
               </Form.Row>
@@ -149,7 +149,7 @@ class SessionFormModal extends Component {
                   <Form.Group controlId="discordConnection">
                     <Form.Label>Discord Server Id</Form.Label>
                     <Form.Control type="text" defaultValue={this.sessionFormInfo.discordGuildId} onChange={this.updateDiscordId} />
-                    <Form.Text className="text-muted">Server id from discord.</Form.Text>
+                    <Form.Text className="text-muted">Server id from discord. (Not yet supported).</Form.Text>
                   </Form.Group>
                 </Col>
               </Form.Row>

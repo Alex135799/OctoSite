@@ -15,6 +15,10 @@ export function addToQueue(data) {
   return { type: types.ADD_TO_QUEUE, list: data };
 }
 
+export function removeFromQueue(data) {
+  return { type: types.REMOVE_FROM_QUEUE, list: data };
+}
+
 export function addSessionOptions(data) {
   return { type: types.ADD_SESSION_OPTIONS, list: data };
 }
