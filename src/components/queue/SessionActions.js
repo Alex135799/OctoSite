@@ -84,34 +84,40 @@ class SessionActions extends Component {
       <div hidden={this.props.hidden}>
         <ButtonToolbar className="mb-3 d-none d-md-block" >
           <ButtonGroup className="mr-2 col-12 justify-content-center" >
-            <Button variant="dark" id="newSession" className="col-3" onClick={this.props.toggleSessionModal} >
+            <Button variant="dark" id="newSession" className="col-3" onClick={this.props.toggleSessionModal} hidden={this.props.isUserAdmin}>
               New Session
             </Button>
-            <Button variant="dark" id="connectBot" className="col-3" onClick={this.props.toggleConnectBotModal} >
+            <Button variant="dark" id="connectBot" className="col-3" onClick={this.props.toggleConnectBotModal} hidden={this.props.isUserAdmin}>
               Connect Bot
             </Button>
-            <Button variant="dark" id="removeSession" className="col-3" onClick={this.props.toggleRemoveSessionConfirmationModal} >
+            <Button variant="danger" id="removeSession" className="col-3" onClick={this.props.toggleRemoveSessionConfirmationModal} hidden={this.props.isUserAdmin}>
               Remove Session
           </Button>
+            <Button variant="dark" id="leaveSession" className="col-4" onClick={this.props.queueActions.leaveSession} >
+              Leave Session
+          </Button>
           </ButtonGroup>
         </ButtonToolbar>
-        <ButtonToolbar className="mb-3 d-block d-md-none" >
+        <ButtonToolbar className="mb-3 d-block d-md-none">
           <ButtonGroup className="mr-2 col-12 justify-content-center" >
-            <Button variant="dark" id="newSession" className="col-4" onClick={this.props.toggleSessionModal} >
+            <Button variant="dark" id="newSession" className="col-4" onClick={this.props.toggleSessionModal} hidden={this.props.isUserAdmin} >
               New
             </Button>
-            <Button variant="dark" id="connectBot" className="col-4" onClick={this.props.toggleConnectBotModal} >
+            <Button variant="dark" id="connectBot" className="col-4" onClick={this.props.toggleConnectBotModal} hidden={this.props.isUserAdmin} >
               Connect
-          </Button>
-            <Button variant="dark" id="removeSession" className="col-4" onClick={this.props.toggleRemoveSessionConfirmationModal} >
+            </Button>
+            <Button variant="danger" id="removeSession" className="col-4" onClick={this.props.toggleRemoveSessionConfirmationModal} hidden={this.props.isUserAdmin} >
               Remove
+          </Button>
+            <Button variant="dark" id="leaveSession" className="col-4" onClick={this.props.queueActions.leaveSession} >
+              Leave
           </Button>
           </ButtonGroup>
         </ButtonToolbar>
 
 
-        <ButtonToolbar className="mb-3 col-12 d-none d-md-block">
-          <ButtonGroup className="col-6 justify-content-start">
+        <ButtonToolbar className="mb-3 col-12 d-none d-md-block" hidden={this.props.isUserAdmin}>
+          <ButtonGroup className="col-6 justify-content-start" hidden={this.props.isUserAdmin}>
             <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} disabled={this.state.isModifyingList}>
               {this.state.isModifyingList ? "Working..." : "Let In:"}
           </Button>
@@ -119,7 +125,7 @@ class SessionActions extends Component {
               <FormControl type="number" defaultValue={this.loadInNumber} />
             </InputGroup>
           </ButtonGroup>
-          <ButtonGroup className="col-6 justify-content-end">
+          <ButtonGroup className="col-6 justify-content-end" hidden={this.props.isUserAdmin}>
             <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.bringBack} disabled={this.state.isModifyingList} >
               {this.state.isModifyingList ? "Working..." : "Bring Back:"}
             </Button>
@@ -128,8 +134,8 @@ class SessionActions extends Component {
             </InputGroup>
           </ButtonGroup>
         </ButtonToolbar>
-        <ButtonToolbar className="mb-3 col-12 d-block d-md-none">
-          <ButtonGroup className="col-12 justify-content-start">
+        <ButtonToolbar className="mb-3 col-12 d-block d-md-none" hidden={this.props.isUserAdmin}>
+          <ButtonGroup className="col-12 justify-content-start" hidden={this.props.isUserAdmin}>
             <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} disabled={this.state.isModifyingList}>
               {this.state.isModifyingList ? "Working..." : "Let In:"}
             </Button>
@@ -137,7 +143,7 @@ class SessionActions extends Component {
               <FormControl type="number" defaultValue={this.loadInNumber} />
             </InputGroup>
           </ButtonGroup>
-          <ButtonGroup className="col-12 justify-content-end">
+          <ButtonGroup className="col-12 justify-content-end" hidden={this.props.isUserAdmin}>
             <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.bringBack} disabled={this.state.isModifyingList} >
               {this.state.isModifyingList ? "Working..." : "Bring Back:"}
             </Button>

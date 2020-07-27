@@ -25,6 +25,11 @@ export function queue(state = initialState, action) {
       cookie.remove(queueSessionCookieName);
       stateQueueCopy.session.error = null;
       break;
+    case types.LEAVE_SESSION:
+      stateQueueCopy = initialState.queue;
+      cookie.remove(queueSessionCookieName);
+      stateQueueCopy.session.error = null;
+      break;
     case types.ADD_SESSION_ERROR:
       stateQueueCopy.session.error = action.error;
       break;

@@ -72,14 +72,14 @@ class SessionInfo extends Component {
         </Alert>
         <Container className="container session" id="noSessionInfoRoot" hidden={this.props.queue.session.sessionId}>
           <Alert variant="dark" id="sessionAlert">
-            No active session.&nbsp;&nbsp;&nbsp;&nbsp;
+            Choose session.&nbsp;&nbsp;&nbsp;&nbsp;
             <Button variant="dark" onClick={this.toggleSessionModal} hidden={!this.isUserAdmin()}>Create Session</Button>
           </Alert>
         </Container>
         <Container className="container session" id="sessionInfoRoot" hidden={!this.props.queue.session.sessionId}>
           <Alert variant="dark" id="sessionAlert">
             <SessionActions 
-              hidden = {!this.isUserAdmin()}
+              isUserAdmin={!this.isUserAdmin()}
               queue={this.props.queue}
               queueActions={this.state.queueActions}
               toggleSessionModal={this.toggleSessionModal}

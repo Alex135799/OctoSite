@@ -6,6 +6,7 @@ export const CHANGE_PAGE = 'CHANGE_PAGE';
 //Queue
 export const ADD_SESSION = 'ADD_SESSION';
 export const REMOVE_SESSION = 'REMOVE_SESSION';
+export const LEAVE_SESSION = 'LEAVE_SESSION';
 export const REPLACE_QUEUE = 'REPLACE_QUEUE';
 export const ADD_TO_QUEUE = 'ADD_TO_QUEUE';
 export const REMOVE_FROM_QUEUE = 'REMOVE_FROM_QUEUE';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Table, Container, Button } from "react-bootstrap";
 import * as queueActions from '../../actions/queueActions';
 import SessionInfo from './SessionInfo';
-import { queueEmptyString, queueLoadingString, queueNoSessionString, backendUrl, octoUserId, queueLoadingSessionsString, websocketUrl } from "../../common/constants/stringConstants"
+import { queueEmptyString, queueLoadingString, queueNoSessionString, backendUrl, octoChannelId, queueLoadingSessionsString, websocketUrl } from "../../common/constants/stringConstants"
 import './Queue.css';
 import axios from "axios";
 import { DateTime } from "luxon";
@@ -116,9 +116,9 @@ class Queue extends Component {
     });
   }
 
-  loadSessionOptions(userId) {
+  loadSessionOptions(channelId) {
     this.initiallyLoadingSessions = true;
-    axios.get(backendUrl + "queue?userId=" + userId + "&sessionActive=true").then((response) => {
+    axios.get(backendUrl + "queue?streamName=" + channelId + "&reverse=true").then((response) => {
       this.props.queueActions.addSessionOptions(response.data.Items)
     });
   }
@@ -159,7 +159,7 @@ class Queue extends Component {
               {entry.name}
             </Button>
           </td>
-          <td>{DateTime.fromMillis(parseInt(entry.sessionId)).setZone('America/New_York').toFormat("D")}</td>
+          <td>{DateTime.fromMillis(parseInt(entry.sessionId)).setZone('America/New_York').toFormat("MM/dd/yyyy hh:mm:ss")}</td>
         </tr>
       )
     });
@@ -178,7 +178,7 @@ class Queue extends Component {
       }
     } else {
       if (!this.initiallyLoadingSessions) {
-        this.loadSessionOptions(octoUserId);
+        this.loadSessionOptions(octoChannelId);
         return this.getTableMessage(queueLoadingSessionsString, 2);
       }
       else if (queue.sessionOptions.length === 0) {
@@ -197,7 +197,7 @@ class Queue extends Component {
       return (
         <tr>
           <th>Session Name</th>
-          <th>Date Created</th>
+          <th>Time Created</th>
         </tr>
       )
     }

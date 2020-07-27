@@ -7,6 +7,10 @@ export function removeSession() {
   return { type: types.REMOVE_SESSION };
 }
 
+export function leaveSession() {
+  return { type: types.LEAVE_SESSION };
+}
+
 export function replaceQueue(data) {
   return { type: types.REPLACE_QUEUE, list: data };
 }
