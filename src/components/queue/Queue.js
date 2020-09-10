@@ -137,13 +137,24 @@ class Queue extends Component {
     }
     let tableRows = list.map((entry, tableRowInd) => {
       tableRowInd++;
-      return (
-        <tr key={tableRowInd}>
-          <td>{tableRowInd}</td>
-          <td>{entry.twitchName}</td>
-          <td>{DateTime.fromMillis(entry.createdAt).setZone('America/New_York').toFormat("HH:mm:ss.SSS")}</td>
-        </tr>
-      )
+      if (this.state.queue.session.showIGN) {
+        return (
+          <tr key={tableRowInd}>
+            <td>{tableRowInd}</td>
+            <td>{entry.twitchName}</td>
+            <td>{entry.ign}</td>
+            <td>{DateTime.fromMillis(entry.createdAt).setZone('America/New_York').toFormat("HH:mm:ss.SSS")}</td>
+          </tr>
+        )
+      } else {
+        return (
+          <tr key={tableRowInd}>
+            <td>{tableRowInd}</td>
+            <td>{entry.twitchName}</td>
+            <td>{DateTime.fromMillis(entry.createdAt).setZone('America/New_York').toFormat("HH:mm:ss.SSS")}</td>
+          </tr>
+        )
+      }
     });
 
     return tableRows;
@@ -171,10 +182,18 @@ class Queue extends Component {
     if (queue.session.sessionId) {
       if (!this.initiallyLoadingQueue) {
         this.loadSessionEntries(queue.session.sessionId);
-        return this.getTableMessage(queueLoadingString, 3);
+        if (this.state.queue.session.showIGN) {
+          return this.getTableMessage(queueLoadingString, 4);
+        } else {
+          return this.getTableMessage(queueLoadingString, 3);
+        }
       }
       else if (queue.list.length === 0) {
-        return this.getTableMessage(queueEmptyString, 3);
+        if (this.state.queue.session.showIGN) {
+          return this.getTableMessage(queueEmptyString, 4);
+        } else {
+          return this.getTableMessage(queueEmptyString, 3);
+        }
       }
     } else {
       if (!this.initiallyLoadingSessions) {
@@ -201,14 +220,25 @@ class Queue extends Component {
         </tr>
       )
     }
-
-    return (
-      <tr>
-        <th className={this.state.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
-        <th>Twitch Name</th>
-        <th>Time Entered</th>
-      </tr>
-    )
+    
+    if (this.state.queue.session.showIGN) {
+      return (
+        <tr>
+          <th className={this.state.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
+          <th>Twitch Name</th>
+          <th>IGN</th>
+          <th>Time Entered</th>
+        </tr>
+      )
+    } else {
+      return (
+        <tr>
+          <th className={this.state.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
+          <th>Twitch Name</th>
+          <th>Time Entered</th>
+        </tr>
+      )
+    }
   }
 
   render() {

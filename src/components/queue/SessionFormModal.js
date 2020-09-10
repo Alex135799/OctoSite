@@ -23,6 +23,7 @@ class SessionFormModal extends Component {
 
   updateName = event => { this.sessionFormInfo.name = event.target.value; }
   updatePlayer = event => { this.sessionFormInfo.player = event.target.value; }
+  updateShowIGN = event => { this.sessionFormInfo.showIGN = event.target.value; }
   updatePerGameLimit = event => { this.sessionFormInfo.perGameLimit = event.target.value; }
   updateEntryLimit = event => { this.sessionFormInfo.entryLimit = event.target.value; }
   updateQueueLimit = event => { this.sessionFormInfo.queueLimit = event.target.value; }
@@ -121,6 +122,14 @@ class SessionFormModal extends Component {
                 <Form.Label>People playing on stream</Form.Label>
                 <Form.Control type="text" placeholder="Smelly Octopus?" onChange={this.updatePlayer} />
               </Form.Group>
+              <Form.Row>
+                <Col xs={12}>
+                  <Form.Group controlId="showIGN" className="text-center">
+                    <Form.Check type="checkbox" label="Turn on IGN submission" onChange={this.updateShowIGN}/>
+                    <Form.Text className="text-muted">Turning this on allows users to provide their IGN into the queue.</Form.Text>
+                  </Form.Group>
+                </Col>
+              </Form.Row>
               <Form.Row>
                 <Col xs={6}>
                   <Form.Group controlId="numberEntriesAllowed">
