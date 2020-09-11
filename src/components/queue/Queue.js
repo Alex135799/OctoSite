@@ -135,6 +135,7 @@ class Queue extends Component {
     if (!this.state.socketConnectionSetUp && !this.state.socketConnectionToggledOff) {
       this.setupWebSocket(this.props.queueActions);
     }
+    list.sort((entry1, entry2) => (entry1.createdAt > entry2.createdAt) ? 1 : -1);
     let tableRows = list.map((entry, tableRowInd) => {
       tableRowInd++;
       if (this.state.queue.session.showIGN) {
@@ -161,6 +162,7 @@ class Queue extends Component {
   }
 
   getSessionOptionsRows(list) {
+    list.sort((entry1, entry2) => (entry1.sessionId < entry2.sessionId) ? 1 : -1);
     let tableRows = list.map((entry, tableRowInd) => {
       tableRowInd++;
       return (
