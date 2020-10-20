@@ -207,12 +207,12 @@ class SessionFormModal extends Component {
 
         <Modal show={this.props.showRemoveSessionConfirmationModal} onHide={this.props.toggleRemoveSessionConfirmationModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Are you sure you want to remove this session?</Modal.Title>
+            <Modal.Title>Are you sure you want to close this session?</Modal.Title>
           </Modal.Header>
 
           <Modal.Footer>
             <Button variant="secondary" onClick={this.props.toggleRemoveSessionConfirmationModal}>Cancel</Button>
-            <Button variant="danger" onClick={this.removeSession} >Remove</Button>
+            <Button variant="danger" onClick={this.removeSession} >Close Session</Button>
           </Modal.Footer>
         </Modal>
       </div>

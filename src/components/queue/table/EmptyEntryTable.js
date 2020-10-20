@@ -1,0 +1,32 @@
+import React, { Component } from 'react';
+import { Table } from "react-bootstrap";
+import { queueEmptyString } from "../../../common/constants/stringConstants"
+import '../Queue.css';
+
+class EmptyEntryTable extends Component {
+
+  render() {
+    return (
+      <Table striped bordered responsive size="sm" variant="light">
+        <thead>
+          <tr>
+            <th className={this.props.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
+            <th>Twitch Name</th>
+            <th hidden={!this.props.queue.session.showIGN}>IGN</th>
+            <th>Time Entered</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr key={1} hidden={!this.props.queue.session.showIGN}>
+            <td colSpan={4}>{queueEmptyString}</td>
+          </tr>
+          <tr key={1} hidden={this.props.queue.session.showIGN}>
+            <td colSpan={3}>{queueEmptyString}</td>
+          </tr>
+        </tbody>
+      </Table>
+    )
+  }
+}
+
+export default EmptyEntryTable;

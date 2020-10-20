@@ -86,7 +86,7 @@ class SessionInfo extends Component {
               toggleRemoveSessionConfirmationModal={this.toggleRemoveSessionConfirmationModal}
               toggleConnectBotModal={this.toggleConnectBotModal}/>
             <p>
-              {this.props.queue.session.player} currently playing:
+              {this.props.queue.session.player} Currently playing:
             </p>
             {this.props.queue.session.name}
           </Alert>

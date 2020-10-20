@@ -90,8 +90,10 @@ class SessionActions extends Component {
             <Button variant="dark" id="connectBot" className="col-3" onClick={this.props.toggleConnectBotModal} hidden={this.props.isUserAdmin}>
               Connect Bot
             </Button>
-            <Button variant="danger" id="stopSession" className="col-3" onClick={this.props.toggleRemoveSessionConfirmationModal} hidden={this.props.isUserAdmin}>
-              Stop Session
+            <Button variant="danger" id="stopSession" className="col-3" 
+                    onClick={this.props.toggleRemoveSessionConfirmationModal} 
+                    hidden={this.props.isUserAdmin || this.props.queue.session.sessionActive === "false"}>
+              Close Session
           </Button>
             <Button variant="dark" id="leaveSession" className="col-4" onClick={this.props.queueActions.leaveSession} >
               Leave Session
@@ -106,8 +108,10 @@ class SessionActions extends Component {
             <Button variant="dark" id="connectBot" className="col-4" onClick={this.props.toggleConnectBotModal} hidden={this.props.isUserAdmin} >
               Connect
             </Button>
-            <Button variant="danger" id="stopSession" className="col-4" onClick={this.props.toggleRemoveSessionConfirmationModal} hidden={this.props.isUserAdmin} >
-              Stop
+            <Button variant="danger" id="stopSession" className="col-4" 
+                    onClick={this.props.toggleRemoveSessionConfirmationModal} 
+                    hidden={this.props.isUserAdmin || this.props.queue.session.sessionActive === "false"}>
+              Close
           </Button>
             <Button variant="dark" id="leaveSession" className="col-4" onClick={this.props.queueActions.leaveSession} >
               Leave

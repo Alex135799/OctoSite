@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import { Table, Container, Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import * as queueActions from '../../actions/queueActions';
 import SessionInfo from './SessionInfo';
-import { queueEmptyString, queueLoadingString, queueNoSessionString, backendUrl, octoChannelId, queueLoadingSessionsString, websocketUrl } from "../../common/constants/stringConstants"
+import { backendUrl, octoChannelId, websocketUrl } from "../../common/constants/stringConstants"
 import './Queue.css';
 import axios from "axios";
-import { DateTime } from "luxon";
 import * as ws from "websocket";
+import LoadingEntryTable from "./table/LoadingEntryTable"
+import LoadingSessionTable from "./table/LoadingSessionTable"
+import EmptyEntryTable from "./table/EmptyEntryTable"
+import EmptySessionTable from "./table/EmptySessionTable"
+import SessionTable from "./table/SessionTable"
+import EntryTable from "./table/EntryTable"
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -123,142 +128,41 @@ class Queue extends Component {
     });
   }
 
-  getTableMessage(message, colspan) {
-    return (
-      <tr key={1}>
-        <td colSpan={colspan}>{message}</td>
-      </tr>
-    )
-  }
+  render() {
+    let tableToUse;
 
-  getEntryRows(list) {
-    if (!this.state.socketConnectionSetUp && !this.state.socketConnectionToggledOff) {
-      this.setupWebSocket(this.props.queueActions);
-    }
-    list.sort((entry1, entry2) => (entry1.createdAt > entry2.createdAt) ? 1 : -1);
-    let tableRows = list.map((entry, tableRowInd) => {
-      tableRowInd++;
-      if (this.state.queue.session.showIGN) {
-        return (
-          <tr key={tableRowInd}>
-            <td>{tableRowInd}</td>
-            <td>{entry.twitchName}</td>
-            <td>{entry.ign}</td>
-            <td>{DateTime.fromMillis(entry.createdAt).setZone('America/New_York').toFormat("HH:mm:ss.SSS")}</td>
-          </tr>
-        )
-      } else {
-        return (
-          <tr key={tableRowInd}>
-            <td>{tableRowInd}</td>
-            <td>{entry.twitchName}</td>
-            <td>{DateTime.fromMillis(entry.createdAt).setZone('America/New_York').toFormat("HH:mm:ss.SSS")}</td>
-          </tr>
-        )
-      }
-    });
-
-    return tableRows;
-  }
-
-  getSessionOptionsRows(list) {
-    list.sort((entry1, entry2) => (entry1.sessionId < entry2.sessionId) ? 1 : -1);
-    let tableRows = list.map((entry, tableRowInd) => {
-      tableRowInd++;
-      return (
-        <tr key={tableRowInd}>
-          <td>
-            <Button variant="outline-secondary" size="lg" block onClick={() => this.props.queueActions.addSession(entry)}>
-              {entry.name}
-            </Button>
-          </td>
-          <td>{DateTime.fromMillis(parseInt(entry.sessionId)).setZone('America/New_York').toFormat("MM/dd/yyyy hh:mm:ss")}</td>
-        </tr>
-      )
-    });
-
-    return tableRows;
-  }
-
-  getTableRows(queue) {
-    if (queue.session.sessionId) {
+    if (this.props.queue.session.sessionId) {
       if (!this.initiallyLoadingQueue) {
-        this.loadSessionEntries(queue.session.sessionId);
-        if (this.state.queue.session.showIGN) {
-          return this.getTableMessage(queueLoadingString, 4);
-        } else {
-          return this.getTableMessage(queueLoadingString, 3);
-        }
+        this.loadSessionEntries(this.props.queue.session.sessionId);
+        tableToUse = <LoadingEntryTable socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
       }
-      else if (queue.list.length === 0) {
-        if (this.state.queue.session.showIGN) {
-          return this.getTableMessage(queueEmptyString, 4);
-        } else {
-          return this.getTableMessage(queueEmptyString, 3);
-        }
+      else if (this.props.queue.list.length === 0) {
+        tableToUse = <EmptyEntryTable socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
+      }
+      else {
+        tableToUse = <EntryTable queue={this.props.queue} socketConnectionSetUp={this.state.socketConnectionSetUp} />
+      }
+      if (!this.state.socketConnectionSetUp && !this.state.socketConnectionToggledOff) {
+        this.setupWebSocket(this.props.queueActions);
       }
     } else {
       if (!this.initiallyLoadingSessions) {
         this.loadSessionOptions(octoChannelId);
-        return this.getTableMessage(queueLoadingSessionsString, 2);
+        tableToUse = <LoadingSessionTable />
       }
-      else if (queue.sessionOptions.length === 0) {
-        return this.getTableMessage(queueNoSessionString, 2);
+      else if (this.props.queue.sessionOptions.length === 0) {
+        tableToUse = <EmptySessionTable />
       }
       else {
-        return this.getSessionOptionsRows(queue.sessionOptions);
+        tableToUse = <SessionTable queue={this.props.queue} queueActions={this.props.queueActions} />
       }
     }
     
-    return this.getEntryRows(queue.list);
-  }
-
-  getTableHeader(queue) {
-    if (queue.list.length === 0 && !queue.session.sessionId) {
-      return (
-        <tr>
-          <th>Session Name</th>
-          <th>Time Created</th>
-        </tr>
-      )
-    }
-    
-    if (this.state.queue.session.showIGN) {
-      return (
-        <tr>
-          <th className={this.state.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
-          <th>Twitch Name</th>
-          <th>IGN</th>
-          <th>Time Entered</th>
-        </tr>
-      )
-    } else {
-      return (
-        <tr>
-          <th className={this.state.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
-          <th>Twitch Name</th>
-          <th>Time Entered</th>
-        </tr>
-      )
-    }
-  }
-
-  render() {
-    let tableRows = this.getTableRows(this.props.queue);
-    let tableHeader = this.getTableHeader(this.props.queue);
-
     return (
       <Container id="queueRoot">
         <SessionInfo queue={this.props.queue} queueActions={this.props.queueActions} user={this.props.user} />
         <div className="scroll-table" style={{ height: this.state.tableHeight }} >
-          <Table striped bordered responsive size="sm" variant="light">
-            <thead>
-              {tableHeader}
-            </thead>
-            <tbody>
-              {tableRows}
-            </tbody>
-          </Table>
+          {tableToUse}
         </div>
       </Container>
     )
