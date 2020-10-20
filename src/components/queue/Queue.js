@@ -29,7 +29,8 @@ class Queue extends Component {
       user: this.props.user,
       queue: this.props.queue,
       tableHeight: 0,
-      sesionInfoHeight: 0
+      sesionInfoHeight: 0,
+      isShowingToEnter: true
     }
 
     this.initiallyLoadingQueue = false;
@@ -37,6 +38,18 @@ class Queue extends Component {
     this.tableFillRatio = .7;
     this.primaryElementName = "sessionInfoRoot";
     this.client = {};
+  }
+
+  toggleShowToEnter = () => {
+    this.setState({
+      socketConnectionSetUp: this.state.socketConnectionSetUp,
+      socketConnectionToggledOff: this.state.socketConnectionToggledOff,
+      user: this.state.user,
+      queue: this.state.queue,
+      tableHeight: this.state.tableHeight,
+      sesionInfoHeight: this.state.sesionInfoHeight,
+      isShowingToEnter: !this.state.isShowingToEnter
+    });
   }
 
   toggleWebSocket = () => {
@@ -48,7 +61,8 @@ class Queue extends Component {
         user: this.props.user,
         queue: this.props.queue,
         tableHeight: this.state.tableHeight,
-        sesionInfoHeight: this.state.sesionInfoHeight
+        sesionInfoHeight: this.state.sesionInfoHeight,
+        isShowingToEnter: this.state.isShowingToEnter
       });
     }
     else {
@@ -84,7 +98,8 @@ class Queue extends Component {
       user: this.props.user,
       queue: this.props.queue,
       tableHeight: this.state.tableHeight,
-      sesionInfoHeight: this.state.sesionInfoHeight
+      sesionInfoHeight: this.state.sesionInfoHeight,
+      isShowingToEnter: this.state.isShowingToEnter
     });
   }
 
@@ -113,13 +128,14 @@ class Queue extends Component {
       tableHeight: tableHeight,
       sesionInfoHeight: sesionInfoHeight,
       socketConnectionSetUp: this.state.socketConnectionSetUp,
-      socketConnectionToggledOff: this.state.socketConnectionToggledOff
+      socketConnectionToggledOff: this.state.socketConnectionToggledOff,
+      isShowingToEnter: this.state.isShowingToEnter
     });
   }
 
   loadSessionEntries(sessionId) {
     this.initiallyLoadingQueue = true;
-    axios.get(backendUrl + "queue/entry?sessionId=" + sessionId + "&active=true").then((response) => {
+    axios.get(backendUrl + "queue/entry?sessionId=" + sessionId).then((response) => {
       this.props.queueActions.replaceQueue(response.data.Items)
     });
   }
@@ -131,36 +147,62 @@ class Queue extends Component {
     });
   }
 
-  render() {
-    let tableToUse;
+  toggleActiveEntries() {
+    this.setState({
+      user: this.state.user,
+      queue: this.state.queue,
+      tableHeight: this.state.tableHeight,
+      sesionInfoHeight: this.state.sesionInfoHeight,
+      socketConnectionSetUp: this.state.socketConnectionSetUp,
+      socketConnectionToggledOff: this.state.socketConnectionToggledOff,
+      isShowingToEnter: this.state.isShowingToEnter
+    })
+  }
 
+  decideTableToUse() {
     if (this.props.queue.session.sessionId) {
       if (!this.initiallyLoadingQueue) {
         this.loadSessionEntries(this.props.queue.session.sessionId);
-        tableToUse = <LoadingEntryTable toggleWebSocket={this.toggleWebSocket} socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
+        return <LoadingEntryTable 
+                      toggleWebSocket={this.toggleWebSocket} 
+                      socketConnectionSetUp={this.state.socketConnectionSetUp} 
+                      queue={this.props.queue} />
       }
-      else if (this.props.queue.list.length === 0) {
-        tableToUse = <EmptyEntryTable toggleWebSocket={this.toggleWebSocket} socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
+      else if ((this.props.queue.list.length === 0 && this.state.isShowingToEnter) ||
+               (this.props.queue.inactiveList.length === 0 && !this.state.isShowingToEnter)) {
+        return <EmptyEntryTable 
+                      toggleWebSocket={this.toggleWebSocket} 
+                      socketConnectionSetUp={this.state.socketConnectionSetUp} 
+                      queue={this.props.queue} />
       }
       else {
-        tableToUse = <EntryTable queue={this.props.queue} toggleWebSocket={this.toggleWebSocket} socketConnectionSetUp={this.state.socketConnectionSetUp} />
+        return <EntryTable 
+                      toggleWebSocket={this.toggleWebSocket} 
+                      socketConnectionSetUp={this.state.socketConnectionSetUp}
+                      queue={this.props.queue}
+                      showToEnter={this.state.isShowingToEnter} />
       }
     } else {
       if (!this.initiallyLoadingSessions) {
         this.loadSessionOptions(octoChannelId);
-        tableToUse = <LoadingSessionTable />
+        return <LoadingSessionTable />
       }
       else if (this.props.queue.sessionOptions.length === 0) {
-        tableToUse = <EmptySessionTable />
+        return <EmptySessionTable />
       }
       else {
-        tableToUse = <SessionTable queue={this.props.queue} queueActions={this.props.queueActions} />
+        return <SessionTable queue={this.props.queue} queueActions={this.props.queueActions} />
       }
     }
+  }
+
+  render() {
+    let tableToUse = this.decideTableToUse();
     
     return (
       <Container id="queueRoot">
-        <SessionInfo queue={this.props.queue} queueActions={this.props.queueActions} user={this.props.user} />
+        <SessionInfo queue={this.props.queue} queueActions={this.props.queueActions} user={this.props.user} 
+                     isShowingToEnter={this.state.isShowingToEnter} toggleShowToEnter={this.toggleShowToEnter} />
         <div className="scroll-table" style={{ height: this.state.tableHeight }} >
           {tableToUse}
         </div>

@@ -27,12 +27,12 @@ export function addSessionOptions(data) {
   return { type: types.ADD_SESSION_OPTIONS, list: data };
 }
 
-export function loadIn(numToLoadIn, queueList) {
-  return { type: types.LOAD_IN, numToLoadIn: numToLoadIn, list: queueList };
+export function loadIn(numToLoadIn, queueList, inactiveList) {
+  return { type: types.LOAD_IN, numToLoadIn: numToLoadIn, list: queueList, inactiveList: inactiveList };
 }
 
-export function bringBack(toBringBack, queueList) {
-  return { type: types.BRING_BACK, toBringBack: toBringBack, list: queueList };
+export function bringBack(numToBringBack, queueList, inactiveList) {
+  return { type: types.BRING_BACK, numToBringBack: numToBringBack, list: queueList, inactiveList: inactiveList };
 }
 
 export function addSessionError(error) {

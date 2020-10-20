@@ -52,7 +52,17 @@ export function queue(state = initialState, action) {
       stateQueueCopy.session.error = null;
       break;
     case types.REPLACE_QUEUE:
-      stateQueueCopy.list = action.list;
+      stateQueueCopy.list = [];
+      stateQueueCopy.inactiveList = [];
+      for (var ii = 0; ii < action.list.length; ii++) {
+        let item = action.list[ii];
+        if (item.active === "true") {
+          stateQueueCopy.list.push(item);
+        }
+        else {
+          stateQueueCopy.inactiveList.push(item);
+        }
+      }
       stateQueueCopy.session.error = null;
       break;
     case types.ADD_SESSION_OPTIONS:
@@ -61,16 +71,20 @@ export function queue(state = initialState, action) {
       break;
     case types.LOAD_IN:
       for (var j = 0; j < action.numToLoadIn; j++) {
-        action.list.shift();
+        let loadedIn = action.list.shift();
+        action.inactiveList.push(loadedIn);
       }
       stateQueueCopy.session.error = null;
       stateQueueCopy.list = action.list;
+      stateQueueCopy.inactiveList = action.inactiveList;
       break;
     case types.BRING_BACK:
-      for (var k = 0; k < action.toBringBack.length; k++) {
-        action.list.unshift(action.toBringBack[k]);
+      for (var k = 0; k < action.numToBringBack; k++) {
+        let broughtBack = action.inactiveList.pop();
+        action.list.unshift(broughtBack);
       }
       stateQueueCopy.list = action.list;
+      stateQueueCopy.inactiveList = action.inactiveList;
       break;
     default:
       if (!state.queue || !state.queue.session || !state.queue.session.sessionId) {

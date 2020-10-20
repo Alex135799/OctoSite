@@ -84,7 +84,9 @@ class SessionInfo extends Component {
               queueActions={this.state.queueActions}
               toggleSessionModal={this.toggleSessionModal}
               toggleRemoveSessionConfirmationModal={this.toggleRemoveSessionConfirmationModal}
-              toggleConnectBotModal={this.toggleConnectBotModal}/>
+              toggleConnectBotModal={this.toggleConnectBotModal}
+              isShowingToEnter={this.props.isShowingToEnter}
+              toggleShowToEnter={this.props.toggleShowToEnter} />
             <p>
               {this.props.queue.session.player} Currently playing:
             </p>

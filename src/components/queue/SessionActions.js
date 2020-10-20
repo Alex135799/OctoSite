@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, ButtonToolbar, ButtonGroup, InputGroup, FormControl } from "react-bootstrap";
+import { Button, ButtonToolbar, ButtonGroup, InputGroup, FormControl, OverlayTrigger, Popover } from "react-bootstrap";
 import { backendUrl } from "../../common/constants/stringConstants";
 import axios from "axios";
 
@@ -31,7 +31,7 @@ class SessionActions extends Component {
         let queueEntry = queueListCopy.shift();
         await this.activateEntry(queueEntry, "false");
       }
-      this.props.queueActions.loadIn(this.loadInNumber, this.props.queue.list);
+      this.props.queueActions.loadIn(this.loadInNumber, this.props.queue.list, this.props.queue.inactiveList);
     } catch (error) {
       if (!error.response) {
         console.error(JSON.stringify(error));
@@ -58,15 +58,17 @@ class SessionActions extends Component {
       isModifyingList: true
     })
     try {
-      let toAdd = await axios.get(backendUrl + "queue/entry?sessionId=" + this.state.session.sessionId + "&active=false&limit=" + this.bringBackNumber + "&reverse=true");
-      let toBringBack = toAdd.data.Items;
-      if (toBringBack.length === 0) {
+      //let toAdd = await axios.get(backendUrl + "queue/entry?sessionId=" + this.state.session.sessionId + "&active=false&limit=" + this.bringBackNumber + "&reverse=true");
+      //let toBringBack = toAdd.data.Items;
+      let queueInactiveListCopy = this.props.queue.inactiveList.slice();
+      if (queueInactiveListCopy.length < this.bringBackNumber) this.bringBackNumber = queueInactiveListCopy.length;
+      if (this.bringBackNumber === 0) {
         this.props.queueActions.addSessionError("Nobody left to bring back.");
       }
-      for (var j = 0; j < toBringBack.length; j++) {
-        await this.activateEntry(toBringBack[j], "true");
+      for (var j = 0; j < this.bringBackNumber; j++) {
+        await this.activateEntry(queueInactiveListCopy[j], "true");
       }
-      this.props.queueActions.bringBack(toBringBack, this.props.queue.list);
+      this.props.queueActions.bringBack(this.bringBackNumber, this.props.queue.list, this.props.queue.inactiveList);
     } catch (error) {
       if (!error.response) {
         console.error(JSON.stringify(error));
@@ -94,10 +96,30 @@ class SessionActions extends Component {
                     onClick={this.props.toggleRemoveSessionConfirmationModal} 
                     hidden={this.props.isUserAdmin || this.props.queue.session.sessionActive === "false"}>
               Close Session
-          </Button>
+            </Button>
             <Button variant="dark" id="leaveSession" className="col-4" onClick={this.props.queueActions.leaveSession} >
               Leave Session
-          </Button>
+            </Button>
+            <OverlayTrigger key={1} placement={"top"}
+              overlay={
+                <Popover id={"popover-1"}>
+                  <Popover.Title as="h3">
+                    {this.props.isShowingToEnter ? 
+                    "Now showing NOT joined" : 
+                    "Now showing ALREADY joined"}
+                  </Popover.Title>
+                  <Popover.Content>
+                    {this.props.isShowingToEnter ? 
+                    "Click this button to show people who have already joined." : 
+                    "Click this button to show people who are still waiting in the queue to join."}
+                  </Popover.Content>
+                </Popover>
+              }>
+              <Button variant="dark" id="bringBackPeople" className="col-4" onClick={this.props.toggleShowToEnter} 
+                      disabled={this.state.isModifyingList} hidden={!this.props.isUserAdmin} >
+                {this.props.isShowingToEnter ? "Show Entered" : "Show To Enter"}
+              </Button>
+            </OverlayTrigger>
           </ButtonGroup>
         </ButtonToolbar>
         <ButtonToolbar className="mb-3 d-block d-md-none">
@@ -112,10 +134,30 @@ class SessionActions extends Component {
                     onClick={this.props.toggleRemoveSessionConfirmationModal} 
                     hidden={this.props.isUserAdmin || this.props.queue.session.sessionActive === "false"}>
               Close
-          </Button>
+            </Button>
             <Button variant="dark" id="leaveSession" className="col-4" onClick={this.props.queueActions.leaveSession} >
               Leave
-          </Button>
+            </Button>
+            <OverlayTrigger key={1} placement={"top"} hidden={!this.props.isUserAdmin}
+              overlay={
+                <Popover id={"popover-1"}>
+                  <Popover.Title as="h3">
+                    {this.props.isShowingToEnter ? 
+                    "Now showing NOT joined" : 
+                    "Now showing ALREADY joined"}
+                  </Popover.Title>
+                  <Popover.Content>
+                    {this.props.isShowingToEnter ? 
+                    "Click this button to show people who have already joined." : 
+                    "Click this button to show people who are still waiting in the queue to join."}
+                  </Popover.Content>
+                </Popover>
+              }>
+              <Button variant="dark" id="bringBackPeople" className="col-6" onClick={this.props.toggleShowToEnter} 
+                      disabled={this.state.isModifyingList} hidden={!this.props.isUserAdmin} >
+                {this.props.isShowingToEnter ? "Show Entered" : "Show To Enter"}
+              </Button>
+            </OverlayTrigger>
           </ButtonGroup>
         </ButtonToolbar>
 
@@ -124,7 +166,7 @@ class SessionActions extends Component {
           <ButtonGroup className="col-6 justify-content-start" hidden={this.props.isUserAdmin}>
             <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} disabled={this.state.isModifyingList}>
               {this.state.isModifyingList ? "Working..." : "Let In:"}
-          </Button>
+            </Button>
             <InputGroup className="col-5" onChange={this.changeLoadInNumber} >
               <FormControl type="number" defaultValue={this.loadInNumber} />
             </InputGroup>
@@ -154,6 +196,53 @@ class SessionActions extends Component {
             <InputGroup className="col-6" onChange={this.changeBringBackNumber} >
               <FormControl type="number" defaultValue={this.bringBackNumber} />
             </InputGroup>
+          </ButtonGroup>
+        </ButtonToolbar>
+        
+        <ButtonToolbar className="mb-3 d-none d-md-block" hidden={this.props.isUserAdmin}>
+          <ButtonGroup className="col-6 offset-3" hidden={this.props.isUserAdmin}>
+            <OverlayTrigger key={1} placement={"top"}
+              overlay={
+                <Popover id={"popover-1"}>
+                  <Popover.Title as="h3">
+                    {this.props.isShowingToEnter ? 
+                    "Now showing NOT joined" : 
+                    "Now showing ALREADY joined"}
+                  </Popover.Title>
+                  <Popover.Content>
+                    {this.props.isShowingToEnter ? 
+                    "Click this button to show people who have already joined." : 
+                    "Click this button to show people who are still waiting in the queue to join."}
+                  </Popover.Content>
+                </Popover>
+              }>
+              <Button variant="dark" id="bringBackPeople" className="col-12" onClick={this.props.toggleShowToEnter} disabled={this.state.isModifyingList} >
+                {this.props.isShowingToEnter ? "Show Entered" : "Show To Enter"}
+              </Button>
+            </OverlayTrigger>
+          </ButtonGroup>
+        </ButtonToolbar>
+        <ButtonToolbar className="mb-3 d-block d-md-none" hidden={this.props.isUserAdmin}>
+          <ButtonGroup className="col-8 offset-2" hidden={this.props.isUserAdmin}>
+            <OverlayTrigger key={1} placement={"top"}
+              overlay={
+                <Popover id={"popover-1"}>
+                  <Popover.Title as="h3">
+                    {this.props.isShowingToEnter ? 
+                    "Now showing NOT joined" : 
+                    "Now showing ALREADY joined"}
+                  </Popover.Title>
+                  <Popover.Content>
+                    {this.props.isShowingToEnter ? 
+                    "Click this button to show people who have already joined." : 
+                    "Click this button to show people who are still waiting in the queue to join."}
+                  </Popover.Content>
+                </Popover>
+              }>
+              <Button variant="dark" id="bringBackPeople" className="col-12" onClick={this.props.toggleShowToEnter} disabled={this.state.isModifyingList} >
+                {this.props.isShowingToEnter ? "Show Entered" : "Show To Enter"}
+              </Button>
+            </OverlayTrigger>
           </ButtonGroup>
         </ButtonToolbar>
 

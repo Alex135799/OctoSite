@@ -23,7 +23,7 @@ class EntryTable extends Component {
   }
 
   render() {
-    let tableRows = this.getEntryRows(this.props.queue.list);
+    let tableRows = this.props.showToEnter ? this.getEntryRows(this.props.queue.list) : this.getEntryRows(this.props.queue.inactiveList);
 
     return (
       <Table striped bordered responsive size="sm" variant="light">
