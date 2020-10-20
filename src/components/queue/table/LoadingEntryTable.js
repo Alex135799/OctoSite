@@ -10,7 +10,7 @@ class LoadingEntryTable extends Component {
       <Table striped bordered responsive size="sm" variant="light">
         <thead>
           <tr>
-            <th className={this.props.socketConnectionSetUp? "green" : "black"} onClick={() => this.toggleWebSocket()}>#</th>
+            <th className={this.props.socketConnectionSetUp? "green" : "black"} onClick={() => this.props.toggleWebSocket()}>#</th>
             <th>Twitch Name</th>
             <th hidden={!this.props.queue.session.showIGN}>IGN</th>
             <th>Time Entered</th>

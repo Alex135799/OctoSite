@@ -97,6 +97,9 @@ class Queue extends Component {
 
   componentDidMount() {
     this.changeTableHeight();
+    if (!this.state.socketConnectionSetUp && !this.state.socketConnectionToggledOff) {
+      this.setupWebSocket(this.props.queueActions);
+    }
   }
 
   changeTableHeight = () => {
@@ -134,16 +137,13 @@ class Queue extends Component {
     if (this.props.queue.session.sessionId) {
       if (!this.initiallyLoadingQueue) {
         this.loadSessionEntries(this.props.queue.session.sessionId);
-        tableToUse = <LoadingEntryTable socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
+        tableToUse = <LoadingEntryTable toggleWebSocket={this.toggleWebSocket} socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
       }
       else if (this.props.queue.list.length === 0) {
-        tableToUse = <EmptyEntryTable socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
+        tableToUse = <EmptyEntryTable toggleWebSocket={this.toggleWebSocket} socketConnectionSetUp={this.state.socketConnectionSetUp} queue={this.props.queue} />
       }
       else {
-        tableToUse = <EntryTable queue={this.props.queue} socketConnectionSetUp={this.state.socketConnectionSetUp} />
-      }
-      if (!this.state.socketConnectionSetUp && !this.state.socketConnectionToggledOff) {
-        this.setupWebSocket(this.props.queueActions);
+        tableToUse = <EntryTable queue={this.props.queue} toggleWebSocket={this.toggleWebSocket} socketConnectionSetUp={this.state.socketConnectionSetUp} />
       }
     } else {
       if (!this.initiallyLoadingSessions) {
