@@ -20,7 +20,7 @@ class LoadingEntryTable extends Component {
           <tr key={1} hidden={!this.props.queue.session.showIGN}>
             <td colSpan={4}>{queueLoadingString}</td>
           </tr>
-          <tr key={1} hidden={this.props.queue.session.showIGN}>
+          <tr key={2} hidden={this.props.queue.session.showIGN}>
             <td colSpan={3}>{queueLoadingString}</td>
           </tr>
         </tbody>

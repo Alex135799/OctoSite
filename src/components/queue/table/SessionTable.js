@@ -4,9 +4,6 @@ import '../Queue.css';
 import { DateTime } from "luxon";
 
 class SessionTable extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   getSessionOptionsRows(list) {
     list.sort((entry1, entry2) => (entry1.sessionId < entry2.sessionId) ? 1 : -1);

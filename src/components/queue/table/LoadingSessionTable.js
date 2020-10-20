@@ -4,10 +4,7 @@ import { queueLoadingSessionsString } from "../../../common/constants/stringCons
 import '../Queue.css';
 
 class LoadingSessionTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+  
   render() {
     return (
       <Table striped bordered responsive size="sm" variant="light">

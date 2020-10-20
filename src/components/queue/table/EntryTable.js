@@ -4,9 +4,6 @@ import '../Queue.css';
 import { DateTime } from "luxon";
 
 class EntryTable extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   getEntryRows(list) {
     list.sort((entry1, entry2) => (entry1.createdAt > entry2.createdAt) ? 1 : -1);
