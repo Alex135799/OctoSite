@@ -30,13 +30,15 @@ class Queue extends Component {
       queue: this.props.queue,
       tableHeight: 0,
       sesionInfoHeight: 0,
-      isShowingToEnter: true
+      isShowingToEnter: true,
+      isCherryPickingOn: false
     }
 
     this.initiallyLoadingQueue = false;
     this.initiallyLoadingSessions = false;
     this.tableFillRatio = .7;
     this.primaryElementName = "sessionInfoRoot";
+    this.secondaryElementName = "noSessionInfoRoot";
     this.client = {};
   }
 
@@ -48,8 +50,22 @@ class Queue extends Component {
       queue: this.state.queue,
       tableHeight: this.state.tableHeight,
       sesionInfoHeight: this.state.sesionInfoHeight,
-      isShowingToEnter: !this.state.isShowingToEnter
+      isShowingToEnter: !this.state.isShowingToEnter,
+      isCherryPickingOn: this.state.isCherryPickingOn
     });
+  }
+
+  toggleCherryPick = () => {
+    this.setState({
+      user: this.props.user,
+      queue: this.props.queue,
+      tableHeight: this.state.tableHeight,
+      sesionInfoHeight: this.state.sesionInfoHeight,
+      socketConnectionSetUp: this.state.socketConnectionSetUp,
+      socketConnectionToggledOff: this.state.socketConnectionToggledOff,
+      isShowingToEnter: this.state.isShowingToEnter,
+      isCherryPickingOn: !this.state.isCherryPickingOn
+    })
   }
 
   toggleWebSocket = () => {
@@ -62,7 +78,8 @@ class Queue extends Component {
         queue: this.props.queue,
         tableHeight: this.state.tableHeight,
         sesionInfoHeight: this.state.sesionInfoHeight,
-        isShowingToEnter: this.state.isShowingToEnter
+        isShowingToEnter: this.state.isShowingToEnter,
+        isCherryPickingOn: this.state.isCherryPickingOn
       });
     }
     else {
@@ -99,7 +116,8 @@ class Queue extends Component {
       queue: this.props.queue,
       tableHeight: this.state.tableHeight,
       sesionInfoHeight: this.state.sesionInfoHeight,
-      isShowingToEnter: this.state.isShowingToEnter
+      isShowingToEnter: this.state.isShowingToEnter,
+      isCherryPickingOn: this.state.isCherryPickingOn
     });
   }
 
@@ -129,7 +147,8 @@ class Queue extends Component {
       sesionInfoHeight: sesionInfoHeight,
       socketConnectionSetUp: this.state.socketConnectionSetUp,
       socketConnectionToggledOff: this.state.socketConnectionToggledOff,
-      isShowingToEnter: this.state.isShowingToEnter
+      isShowingToEnter: this.state.isShowingToEnter,
+      isCherryPickingOn: this.state.isCherryPickingOn
     });
   }
 
@@ -147,16 +166,11 @@ class Queue extends Component {
     });
   }
 
-  toggleActiveEntries() {
-    this.setState({
-      user: this.state.user,
-      queue: this.state.queue,
-      tableHeight: this.state.tableHeight,
-      sesionInfoHeight: this.state.sesionInfoHeight,
-      socketConnectionSetUp: this.state.socketConnectionSetUp,
-      socketConnectionToggledOff: this.state.socketConnectionToggledOff,
-      isShowingToEnter: this.state.isShowingToEnter
-    })
+  isUserAdmin = () => {
+    if (!this.props.user.loggedIn) {
+      return false;
+    }
+    return this.props.user.accessInfo["cognito:groups"].includes("OoglopBot_QueueAdmin");
   }
 
   decideTableToUse() {
@@ -169,7 +183,7 @@ class Queue extends Component {
                       queue={this.props.queue} />
       }
       else if ((this.props.queue.list.length === 0 && this.state.isShowingToEnter) ||
-               (this.props.queue.inactiveList.length === 0 && !this.state.isShowingToEnter)) {
+              (this.props.queue.inactiveList.length === 0 && !this.state.isShowingToEnter)) {
         return <EmptyEntryTable 
                       toggleWebSocket={this.toggleWebSocket} 
                       socketConnectionSetUp={this.state.socketConnectionSetUp} 
@@ -180,7 +194,10 @@ class Queue extends Component {
                       toggleWebSocket={this.toggleWebSocket} 
                       socketConnectionSetUp={this.state.socketConnectionSetUp}
                       queue={this.props.queue}
-                      showToEnter={this.state.isShowingToEnter} />
+                      showToEnter={this.state.isShowingToEnter}
+                      isUserAdmin={!this.isUserAdmin()}
+                      isCherryPickingOn={this.state.isCherryPickingOn}
+                      queueActions={this.props.queueActions} />
       }
     } else {
       if (!this.initiallyLoadingSessions) {
@@ -199,11 +216,15 @@ class Queue extends Component {
   render() {
     let tableToUse = this.decideTableToUse();
     
+    //TODO: Come up with solution to table height sometimes after sessions are not loaded, so refresh is needed.
+    //      Maybe something to do with using props vs state?
     return (
       <Container id="queueRoot">
         <SessionInfo queue={this.props.queue} queueActions={this.props.queueActions} user={this.props.user} 
-                     isShowingToEnter={this.state.isShowingToEnter} toggleShowToEnter={this.toggleShowToEnter} />
-        <div className="scroll-table" style={{ height: this.state.tableHeight }} >
+                     isShowingToEnter={this.state.isShowingToEnter} toggleShowToEnter={this.toggleShowToEnter}
+                     isUserAdmin={!this.isUserAdmin()} toggleCherryPick={this.toggleCherryPick}
+                     isCherryPickingOn={this.state.isCherryPickingOn} />
+        <div className="scroll-table" style={this.state.tableHeight !== 0 ? { height: this.state.tableHeight } : {}} >
           {tableToUse}
         </div>
       </Container>

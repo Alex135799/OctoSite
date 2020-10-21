@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ButtonToolbar, ButtonGroup, InputGroup, FormControl, OverlayTrigger, Popover } from "react-bootstrap";
-import { backendUrl } from "../../common/constants/stringConstants";
-import axios from "axios";
+import { activateEntry } from "./QueueEntryMovement";
 
 class SessionActions extends Component {
   constructor(props) {
@@ -24,20 +23,12 @@ class SessionActions extends Component {
       session: this.props.queue.session,
       isModifyingList: true
     })
-    try {
-      let queueListCopy = this.props.queue.list.slice();
-      if (queueListCopy.length < this.loadInNumber) this.loadInNumber = queueListCopy.length;
-      for (var i = 0; i < this.loadInNumber; i++) {
-        let queueEntry = queueListCopy.shift();
-        await this.activateEntry(queueEntry, "false");
-      }
-      this.props.queueActions.loadIn(this.loadInNumber, this.props.queue.list, this.props.queue.inactiveList);
-    } catch (error) {
-      if (!error.response) {
-        console.error(JSON.stringify(error));
-      } else {
-        this.props.queueActions.addSessionError(error.response.data);
-      }
+    let queueListCopy = this.props.queue.list.slice();
+    let loadInNum = parseInt(this.loadInNumber);
+    if (queueListCopy.length < loadInNum) loadInNum = queueListCopy.length;
+    for (var i = 0; i < loadInNum; i++) {
+      let listIndex = i;
+      await activateEntry(this.props.queue.list, this.props.queue.inactiveList, queueListCopy[listIndex], 0, "false", this.props.queueActions);
     }
     this.setState({
       session: this.props.queue.session,
@@ -45,37 +36,25 @@ class SessionActions extends Component {
     })
   }
 
-  activateEntry = async (entry, activeStatus) => {
-    let timeEntered = entry.createdAt;
-    let sessionId = entry.sessionId;
-    let patchInfo = { "active": activeStatus };
-    await axios.patch(backendUrl + "queue/entry/" + sessionId + "/" + timeEntered, JSON.stringify(patchInfo));
-  }
-
   bringBack = async () => {
     this.setState({
       session: this.props.queue.session,
       isModifyingList: true
     })
-    try {
-      //let toAdd = await axios.get(backendUrl + "queue/entry?sessionId=" + this.state.session.sessionId + "&active=false&limit=" + this.bringBackNumber + "&reverse=true");
-      //let toBringBack = toAdd.data.Items;
-      let queueInactiveListCopy = this.props.queue.inactiveList.slice();
-      if (queueInactiveListCopy.length < this.bringBackNumber) this.bringBackNumber = queueInactiveListCopy.length;
-      if (this.bringBackNumber === 0) {
-        this.props.queueActions.addSessionError("Nobody left to bring back.");
+    let queueInactiveListCopy = this.props.queue.inactiveList.slice();
+    let bringBackNum = parseInt(this.bringBackNumber);
+    if (queueInactiveListCopy.length < bringBackNum) bringBackNum = queueInactiveListCopy.length;
+    if (bringBackNum === 0) {
+      this.props.queueActions.addSessionError("Nobody left to bring back.");
+    }
+    else {
+      for (var j = 1; j < bringBackNum + 1; j++) {
+        let listIndex = queueInactiveListCopy.length - j;
+        await activateEntry(this.props.queue.list, this.props.queue.inactiveList, queueInactiveListCopy[listIndex], this.props.queue.inactiveList.length - 1, "true", this.props.queueActions);
       }
-      for (var j = 0; j < this.bringBackNumber; j++) {
-        await this.activateEntry(queueInactiveListCopy[j], "true");
-      }
-      this.props.queueActions.bringBack(this.bringBackNumber, this.props.queue.list, this.props.queue.inactiveList);
-    } catch (error) {
-      if (!error.response) {
-        console.error(JSON.stringify(error));
-      } else {
-        this.props.queueActions.addSessionError(error.response.data);
-      }
-    }this.setState({
+    }
+    
+    this.setState({
       session: this.props.queue.session,
       isModifyingList: false
     })
@@ -161,7 +140,6 @@ class SessionActions extends Component {
           </ButtonGroup>
         </ButtonToolbar>
 
-
         <ButtonToolbar className="mb-3 col-12 d-none d-md-block" hidden={this.props.isUserAdmin}>
           <ButtonGroup className="col-6 justify-content-start" hidden={this.props.isUserAdmin}>
             <Button variant="dark" id="loadInMorePeople" className="col-6" onClick={this.loadIn} disabled={this.state.isModifyingList}>
@@ -216,10 +194,13 @@ class SessionActions extends Component {
                   </Popover.Content>
                 </Popover>
               }>
-              <Button variant="dark" id="bringBackPeople" className="col-12" onClick={this.props.toggleShowToEnter} disabled={this.state.isModifyingList} >
+              <Button variant="dark" id="bringBackPeople" className="col-7" onClick={this.props.toggleShowToEnter} disabled={this.state.isModifyingList} >
                 {this.props.isShowingToEnter ? "Show Entered" : "Show To Enter"}
               </Button>
             </OverlayTrigger>
+            <Button variant={this.props.isCherryPickingOn ? "info" : "dark"} id="cherryPick" className="col-5" onClick={this.props.toggleCherryPick} disabled={this.state.isModifyingList} >
+              Cherry Pick
+            </Button>
           </ButtonGroup>
         </ButtonToolbar>
         <ButtonToolbar className="mb-3 d-block d-md-none" hidden={this.props.isUserAdmin}>
@@ -239,10 +220,13 @@ class SessionActions extends Component {
                   </Popover.Content>
                 </Popover>
               }>
-              <Button variant="dark" id="bringBackPeople" className="col-12" onClick={this.props.toggleShowToEnter} disabled={this.state.isModifyingList} >
+              <Button variant="dark" id="toggleList" className="col-7" onClick={this.props.toggleShowToEnter} disabled={this.state.isModifyingList} >
                 {this.props.isShowingToEnter ? "Show Entered" : "Show To Enter"}
               </Button>
             </OverlayTrigger>
+            <Button variant={this.props.isCherryPickingOn ? "info" : "dark"} id="cherryPick" className="col-5" onClick={this.props.toggleCherryPick} disabled={this.state.isModifyingList} >
+              Cherry Pick
+            </Button>
           </ButtonGroup>
         </ButtonToolbar>
 

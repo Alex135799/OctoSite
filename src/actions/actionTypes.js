@@ -11,8 +11,7 @@ export const REPLACE_QUEUE = 'REPLACE_QUEUE';
 export const ADD_TO_QUEUE = 'ADD_TO_QUEUE';
 export const REMOVE_FROM_QUEUE = 'REMOVE_FROM_QUEUE';
 export const ADD_SESSION_OPTIONS = 'ADD_SESSION_OPTIONS';
-export const LOAD_IN = 'LOAD_IN';
-export const BRING_BACK = 'BRING_BACK';
+export const MOVE_ENTRY = 'MOVE_ENTRY';
 export const ADD_SESSION_ERROR = 'ADD_SESSION_ERROR';
 
 //Calendar

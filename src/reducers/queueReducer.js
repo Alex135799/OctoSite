@@ -69,22 +69,22 @@ export function queue(state = initialState, action) {
       stateQueueCopy.sessionOptions = action.list;
       stateQueueCopy.session.error = null;
       break;
-    case types.LOAD_IN:
-      for (var j = 0; j < action.numToLoadIn; j++) {
-        let loadedIn = action.list.shift();
+    case types.MOVE_ENTRY:
+      if (action.activeStatus === "true") {
+        let broughtBack = action.entry;
+        action.inactiveList.splice(action.entryIndex, 1);
+        action.list.unshift(broughtBack);
+        stateQueueCopy.list = action.list;
+        stateQueueCopy.inactiveList = action.inactiveList;
+      }
+      else if (action.activeStatus === "false") {
+        let loadedIn = action.entry;
         action.inactiveList.push(loadedIn);
+        action.list.splice(action.entryIndex, 1);
+        stateQueueCopy.list = action.list;
+        stateQueueCopy.inactiveList = action.inactiveList;
       }
       stateQueueCopy.session.error = null;
-      stateQueueCopy.list = action.list;
-      stateQueueCopy.inactiveList = action.inactiveList;
-      break;
-    case types.BRING_BACK:
-      for (var k = 0; k < action.numToBringBack; k++) {
-        let broughtBack = action.inactiveList.pop();
-        action.list.unshift(broughtBack);
-      }
-      stateQueueCopy.list = action.list;
-      stateQueueCopy.inactiveList = action.inactiveList;
       break;
     default:
       if (!state.queue || !state.queue.session || !state.queue.session.sessionId) {

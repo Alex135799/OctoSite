@@ -10,7 +10,8 @@ export default {
   queue: {
     session: {},
     sessionOptions: [],
-    list: []
+    list: [],
+    inactiveList: []
   },
   calendar: {
     form: {

@@ -50,13 +50,6 @@ class SessionInfo extends Component {
     });
   }
 
-  isUserAdmin = () => {
-    if (!this.props.user.loggedIn) {
-      return false;
-    }
-    return this.props.user.accessInfo["cognito:groups"].includes("OoglopBot_QueueAdmin");
-  }
-
   getUserId = () => {
     if (this.props.user.loggedIn) {
       return this.props.user.idInfo.sub;
@@ -73,20 +66,22 @@ class SessionInfo extends Component {
         <Container className="container session" id="noSessionInfoRoot" hidden={this.props.queue.session.sessionId}>
           <Alert variant="dark" id="sessionAlert">
             Choose session.&nbsp;&nbsp;&nbsp;&nbsp;
-            <Button variant="dark" onClick={this.toggleSessionModal} hidden={!this.isUserAdmin()}>Create Session</Button>
+            <Button variant="dark" onClick={this.toggleSessionModal} hidden={this.props.isUserAdmin}>Create Session</Button>
           </Alert>
         </Container>
         <Container className="container session" id="sessionInfoRoot" hidden={!this.props.queue.session.sessionId}>
           <Alert variant="dark" id="sessionAlert">
             <SessionActions 
-              isUserAdmin={!this.isUserAdmin()}
+              isUserAdmin={this.props.isUserAdmin}
               queue={this.props.queue}
               queueActions={this.state.queueActions}
               toggleSessionModal={this.toggleSessionModal}
               toggleRemoveSessionConfirmationModal={this.toggleRemoveSessionConfirmationModal}
               toggleConnectBotModal={this.toggleConnectBotModal}
               isShowingToEnter={this.props.isShowingToEnter}
-              toggleShowToEnter={this.props.toggleShowToEnter} />
+              toggleShowToEnter={this.props.toggleShowToEnter}
+              toggleCherryPick={this.props.toggleCherryPick}
+              isCherryPickingOn={this.props.isCherryPickingOn} />
             <p>
               {this.props.queue.session.player} Currently playing:
             </p>
